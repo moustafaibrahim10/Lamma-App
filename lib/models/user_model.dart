@@ -1,0 +1,49 @@
+class UserModel {
+  String? name;
+  String? email;
+  String? phone;
+  String? password;
+  String? uId;
+  String? image;
+  String? cover;
+  String? bio;
+  bool? isEmailVerified;
+
+  UserModel({
+    this.name,
+    this.email,
+    this.phone,
+    this.password,
+    this.uId,
+    this.isEmailVerified,
+    this.image,
+    this.bio,
+    this.cover
+  });
+
+  UserModel.fromJson(Map<String, dynamic> json) {
+    name = json["name"];
+    email = json["email"];
+    phone = json["phone"];
+    password = json["password"];
+    uId = json["uId"];
+    isEmailVerified = json["isEmailVerified"];
+    image = json["image"];
+    bio=json["bio"];
+    cover=json["cover"];
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "email": email,
+      "phone": phone,
+      "uId":uId,
+      "password": password,
+      "isEmailVerified": isEmailVerified,
+      "image": image,
+      "bio":bio,
+      "cover":cover
+    };
+  }
+}

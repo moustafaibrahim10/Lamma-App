@@ -1,0 +1,113 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../utils/app_constants.dart';
+import '../../utils/enums.dart';
+
+Widget defaultTextFormField({
+  required TextEditingController controller,
+  required String labelText,
+  required IconData icon,
+  required String? validate(String)?,
+  Widget? suffixIcon,
+  bool? obscureText = false,
+}) => TextFormField(
+  controller: controller,
+  cursorColor: AppConstants.primaryColor,
+  obscureText: obscureText!,
+  decoration: InputDecoration(
+    prefixIcon: Icon(icon),
+    suffixIcon: suffixIcon,
+    labelText: labelText,
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: AppConstants.primaryColor),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.red),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.redAccent),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    floatingLabelStyle: TextStyle(color: AppConstants.primaryColor),
+  ),
+  validator: validate,
+);
+
+Widget defaultElevatedButton({
+  required BuildContext context,
+  required String text,
+  double? height ,
+  double? width ,
+  double? radius ,
+  required Function() function,
+}) => SizedBox(
+  height: height ,
+  width: width ,
+  child: ElevatedButton(
+    onPressed: function,
+    child: Text(text, style: TextStyle(color: Colors.white, fontSize: 20)),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: AppConstants.primaryColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius ?? 5)),
+    ),
+  ),
+);
+
+Future<bool?> showToast({required String msg, required ToastState state}) =>
+    Fluttertoast.showToast(
+      msg: msg,
+      backgroundColor: _chooseToastColor(state: state),
+      toastLength: Toast.LENGTH_SHORT,
+      textColor: Colors.white,
+      timeInSecForIosWeb: 5,
+    );
+
+Color _chooseToastColor({required ToastState state}) {
+  switch (state) {
+    case ToastState.success:
+      return Colors.green;
+    case ToastState.warring:
+      return Colors.yellow;
+    case ToastState.error:
+      return Colors.red;
+  }
+}
+
+Future pushAndFinish({required BuildContext context, required Widget screen}) =>
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+      (route) => false,
+    );
+
+Widget defaultTextbutton({
+  required String text,
+  required Function() function,
+})=> TextButton(
+onPressed: function,
+child: Text(
+text,
+style: TextStyle(color: AppConstants.primaryColor,
+fontSize: 20,
+fontWeight: FontWeight.bold),
+),
+);
+
+Widget myDivider() =>Container(
+width: double.infinity,
+height: 1.0,
+color: Colors.grey[300],
+);
+
+Future<dynamic> navigateTo(BuildContext context,Widget widget)=> Navigator.push(
+context,
+MaterialPageRoute(builder: (context) => widget),
+);
