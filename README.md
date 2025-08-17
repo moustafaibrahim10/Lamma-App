@@ -16,5 +16,5 @@ The app includes authentication, real-time database, and cloud storage.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/social-app.git
+   git clone https://github.com/moustafaibrahim10/social-app.git
    cd social-app
