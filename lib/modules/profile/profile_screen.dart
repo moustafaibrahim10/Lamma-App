@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/shared/components/components.dart';
+import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/states.dart';
+import 'package:social_app/modules/profile/edit_profile.dart';
 import 'package:social_app/styles/icon_broken.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -15,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = SocialCubit.get(context);
 
-        if (cubit.userModel == null)
+        if (userModel == null)
           return const Center(child: CircularProgressIndicator());
 
         return Padding(
@@ -38,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
                             topRight: Radius.circular(4.0),
                           ),
                           image: DecorationImage(
-                            image: NetworkImage('${cubit.userModel?.cover}'),
+                            image: NetworkImage('${userModel?.cover}'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -51,7 +53,7 @@ class ProfileScreen extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 55,
                         backgroundImage: NetworkImage(
-                          '${cubit.userModel?.image}',
+                          '${userModel?.image}',
                         ),
                       ),
                     ),
@@ -60,12 +62,12 @@ class ProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                " ${cubit.userModel?.name}",
+                " ${userModel?.name}",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               SizedBox(height: 5),
               Text(
-                "${cubit.userModel?.bio}",
+                "${userModel?.bio}",
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               Padding(
@@ -147,13 +149,18 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        navigateTo(context, EditProfileScreen());
+
+                      },
                       child: Text("Add Photos"),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 10.0),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      navigateTo(context, EditProfileScreen());
+                    },
                     child: Icon(IconBroken.Edit, size: 14),
                   ),
                 ],

@@ -107,8 +107,7 @@ class LoginScreen extends StatelessWidget {
                                 child: defaultElevatedButton(
                                   height:
                                       MediaQuery.of(context).size.height * 0.05,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
+                                  width:  double.infinity,
 
                                   context: context,
                                   text: "Login",

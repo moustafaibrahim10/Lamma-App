@@ -78,7 +78,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         .doc(uId)
         .set(userModel.toMap())
         .then((value) {
-      emit(CreateSuccessState());
+      emit(CreateSuccessState(uId));
     })
         .catchError((error) {
       print(error.toString());

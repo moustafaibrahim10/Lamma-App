@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/shared/components/components.dart';
+import 'package:social_app/core/shared/local/cache_helper.dart';
 import 'package:social_app/core/utils/enums.dart';
 import 'package:social_app/layout/social_layout.dart';
 import 'package:social_app/modules/register/register_cubit/register_cubit.dart';
@@ -29,6 +30,7 @@ class RegisterScreen extends StatelessWidget {
           }
           if (state is CreateSuccessState) {
             pushAndFinish(context: context, screen: SocialLayout());
+            CacheHelper.saveData(key: "uId", value: state.uId);
           }
         },
         builder: (context, state) {
@@ -150,7 +152,7 @@ class RegisterScreen extends StatelessWidget {
                               (context) => Center(
                                 child: defaultElevatedButton(
                                   height: MediaQuery.of(context).size.height * 0.05,
-                                  width:  MediaQuery.of(context).size.width * 0.4,
+                                  width:  double.infinity,
                                   context: context,
                                   text: "Register",
                                   function: () {
