@@ -29,12 +29,12 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(AppConstants.uId)
         .get()
         .then((value) {
-      userModel = UserModel.fromJson(value.data()!);
-    })
+          userModel = UserModel.fromJson(value.data()!);
+        })
         .catchError((error) {
-      print("error");
-      emit(GetUserErrorState(error.toString()));
-    });
+          print("error");
+          emit(GetUserErrorState(error.toString()));
+        });
   }
 
   int currentIndex = 0;
@@ -81,43 +81,65 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  // void uploadProfileImage() {
-  //   FirebaseStorage.instance
-  //       .ref()
-  //       .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
-  //       .putFile(File(profileImage!.path))
-  //       .then((value) {
-  //         value.ref
-  //             .getDownloadURL()
-  //             .then((value) {
-  //               print(value);
-  //             })
-  //             .catchError((error) {
-  //               print("error");
-  //             });
-  //         emit(uploadProfileImageSuccessState());
-  //       })
-  //       .catchError((error) {
-  //         print(error.toString());
-  //         emit(uploadProfileImageErrorState());
-  //       });
-  // }
-
   //cloudinary
-  final cloudinary = CloudinaryPublic('dadz62mgc', 'lammaApp', cache: false);
+  final cloudinary = CloudinaryPublic("dadz62mgc", "lammaApp");
 
   Future<String?> uploadToCloudinary(File file) async {
     try {
       CloudinaryResponse response = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(
-            file.path, resourceType: CloudinaryResourceType.Image),
+          file.path,
+          resourceType: CloudinaryResourceType.Image,
+        ),
       );
       return response.secureUrl;
-    } catch (error) {
-      print('Cloudinary upload error: $error');
+    } on CloudinaryException catch (error) {
+      print("Cloudinary error is $error");
       return null;
     }
   }
+
+  //upload photo
+  void uploadProfileImage() async {
+    if (profileImage == null) return;
+
+    emit(UploadProfileImageLoadingState());
+
+    final url = await uploadToCloudinary(File(profileImage!.path));
+    if (url != null) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(AppConstants.uId)
+          .update({'image': url})
+          .then((value) {
+            emit(UploadProfileImageSuccessState());
+          })
+          .catchError((error) {
+            emit(UploadProfileImageErrorState());
+            print(error);
+          });
+    }
+  }
+
+  //uploadCoverImage
+  void uploadCoverImage() async {
+    if (coverImage == null) return;
+
+    emit(UploadCoverImageLoadingState());
+
+    final url = await uploadToCloudinary(File(coverImage!.path));
+    if (url != null) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(AppConstants.uId)
+          .update({'cover': url})
+          .then((value) {
+            emit(UploadCoverImageSuccessState());
+          })
+          .catchError((error) {
+            emit(UploadCoverImageErrorState());
+            print(error);
+          });
+    }
+  }
 }
-
-

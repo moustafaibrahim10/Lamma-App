@@ -14,14 +14,18 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+      },
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
         TextEditingController nameController = TextEditingController();
         TextEditingController bioController = TextEditingController();
-
         nameController.text = userModel?.name.toString() ?? "Name";
         bioController.text = userModel?.bio.toString() ?? "Bio";
+        if(state is UploadProfileImageLoadingState || state is UploadCoverImageLoadingState)
+        {
+          return _loadingState(context,cubit);
+        }
         return Scaffold(
           appBar: defaultAppBar(
             context: context,
@@ -30,7 +34,10 @@ class EditProfileScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: defaultTextbutton(text: 'Update', function: () {
-                  cubit.uploadProfileImage();
+                  if(cubit.profileImage !=null)
+                    cubit.uploadProfileImage();
+                  if(cubit.coverImage !=null)
+                    cubit.uploadCoverImage();
                 }),
               ),
             ],
@@ -59,13 +66,13 @@ class EditProfileScreen extends StatelessWidget {
                                 ),
                                 image: DecorationImage(
                                   image:
-                                      cubit.coverImage == null
-                                          ? NetworkImage(
-                                            '${userModel?.cover}',
-                                          )
-                                          : FileImage(
-                                            File(cubit.coverImage!.path),
-                                          ),
+                                  cubit.coverImage == null
+                                      ? NetworkImage(
+                                    '${userModel?.cover}',
+                                  )
+                                      : FileImage(
+                                    File(cubit.coverImage!.path),
+                                  ),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -103,17 +110,17 @@ class EditProfileScreen extends StatelessWidget {
                           CircleAvatar(
                             radius: 59,
                             backgroundColor:
-                                Theme.of(context).scaffoldBackgroundColor,
+                            Theme.of(context).scaffoldBackgroundColor,
                             child: CircleAvatar(
                               radius: 55,
                               backgroundImage:
-                                  cubit.profileImage == null
-                                      ? NetworkImage(
-                                        '${userModel?.image}',
-                                      )
-                                      : FileImage(
-                                        File(cubit.profileImage!.path),
-                                      ),
+                              cubit.profileImage == null
+                                  ? NetworkImage(
+                                '${userModel?.image}',
+                              )
+                                  : FileImage(
+                                File(cubit.profileImage!.path),
+                              ),
                             ),
                           ),
                           Padding(
@@ -171,6 +178,29 @@ class EditProfileScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Scaffold _loadingState(context,cubit){
+    return Scaffold(
+      appBar: defaultAppBar(
+        context: context,
+        title: "Edit Profile",
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: defaultTextbutton(text: 'Update', function: () {
+              if(cubit.profileImage !=null)
+                cubit.uploadProfileImage();
+              if(cubit.coverImage !=null)
+                cubit.uploadCoverImage();
+            }),
+          ),
+        ],
+      ),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }
