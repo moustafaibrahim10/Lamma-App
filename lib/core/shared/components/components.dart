@@ -48,13 +48,17 @@ Widget defaultElevatedButton({
   double? height,
   double? width,
   double? radius,
+  double? textSize,
   required Function() function,
 }) => SizedBox(
   height: height,
   width: width,
   child: ElevatedButton(
     onPressed: function,
-    child: Text(text, style: TextStyle(color: Colors.white, fontSize: 20)),
+    child: Text(
+      text,
+      style: TextStyle(color: Colors.white, fontSize: textSize ?? 20),
+    ),
     style: ElevatedButton.styleFrom(
       backgroundColor: AppConstants.primaryColor,
       shape: RoundedRectangleBorder(

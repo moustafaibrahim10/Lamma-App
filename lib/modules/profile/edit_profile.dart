@@ -26,12 +26,17 @@ class EditProfileScreen extends StatelessWidget {
 
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {
-        if(state is UpdateUserDataSuccessState)
-          showToast(msg: "Profile Updated Successfully", state: ToastState.success);
+        if (state is UpdateUserDataSuccessState)
+          showToast(
+            msg: "Profile Data Updated Successfully",
+            state: ToastState.success,
+          );
 
-        if(state is UpdateUserDataErrorState)
-          showToast(msg: "Something went wrong!, try again", state: ToastState.error);
-
+        if (state is UpdateUserDataErrorState)
+          showToast(
+            msg: "Something went wrong!, try again",
+            state: ToastState.error,
+          );
       },
       builder: (context, state) {
         return Scaffold(
@@ -48,7 +53,7 @@ class EditProfileScreen extends StatelessWidget {
                       name: nameController.text,
                       bio: bioController.text,
                       phone: phoneController.text,
-                      email: emailController.text
+                      email: emailController.text,
                     );
                   },
                 ),
@@ -85,7 +90,9 @@ class EditProfileScreen extends StatelessWidget {
                                   image: DecorationImage(
                                     image:
                                         cubit.coverImage == null
-                                            ? NetworkImage('${userModel?.cover}')
+                                            ? NetworkImage(
+                                              '${userModel?.cover}',
+                                            )
                                             : FileImage(
                                               File(cubit.coverImage!.path),
                                             ),
@@ -106,7 +113,7 @@ class EditProfileScreen extends StatelessWidget {
                                     radius: 16,
                                     child: IconButton(
                                       onPressed: () {
-                                        cubit.uploadCoverImage();
+                                        cubit.getCoverImage();
                                       },
                                       icon: Icon(
                                         IconBroken.Camera,
@@ -138,7 +145,10 @@ class EditProfileScreen extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(right: 5.0, top: 5),
+                              padding: const EdgeInsets.only(
+                                right: 5.0,
+                                top: 5,
+                              ),
                               child: CircleAvatar(
                                 radius: 18,
                                 backgroundColor: Colors.white,
@@ -147,7 +157,7 @@ class EditProfileScreen extends StatelessWidget {
                                   radius: 16,
                                   child: IconButton(
                                     onPressed: () {
-                                      cubit.uploadProfileImage();
+                                      cubit.getProfileImage();
                                     },
                                     icon: Icon(
                                       IconBroken.Camera,
@@ -163,6 +173,8 @@ class EditProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (cubit.profileImage != null || cubit.coverImage != null)
+                    _whenUpload(context, cubit, state),
                   SizedBox(height: 20),
                   defaultTextFormField(
                     controller: nameController,
@@ -182,7 +194,7 @@ class EditProfileScreen extends StatelessWidget {
                     icon: IconBroken.Paper,
                     validate: (value) {
                       if (value.isEmpty || value == null) {
-                        return "Please enter your name";
+                        return "Please enter your bio";
                       }
                       return null;
                     },
@@ -194,7 +206,7 @@ class EditProfileScreen extends StatelessWidget {
                     icon: IconBroken.Message,
                     validate: (value) {
                       if (value.isEmpty || value == null) {
-                        return "Phone must not be empty";
+                        return "Email must not be empty";
                       }
                       return null;
                     },
@@ -211,7 +223,6 @@ class EditProfileScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-
                 ],
               ),
             ),
@@ -219,5 +230,90 @@ class EditProfileScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _whenUpload(context, cubit, state) {
+    if (cubit.profileImage != null && cubit.coverImage != null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: Row(
+          children: [
+            // if(state is UploadProfileImageLoadingState)
+            Expanded(
+              child: Column(
+                children: [
+                  defaultElevatedButton(
+                    context: context,
+                    text: "Upload Profile",
+                    textSize: 18,
+                    function: () {
+                      cubit.updateProfileImage();
+                    },
+                  ),
+                  SizedBox(height: 5),
+                  if (state is UploadProfileImageLoadingState)
+                    LinearProgressIndicator(),
+                ],
+              ),
+            ),
+            SizedBox(width: 5),
+
+            Expanded(
+              child: Column(
+                children: [
+                  defaultElevatedButton(
+                    context: context,
+                    text: "Upload Cover",
+                    textSize: 18,
+                    function: () {
+                      cubit.updateCoverImage();
+                    },
+                  ),
+                  SizedBox(height: 5),
+                  if (state is UploadCoverImageLoadingState)
+                    LinearProgressIndicator(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (cubit.profileImage != null) {
+      return Column(
+        children: [
+          SizedBox(height: 10),
+          defaultElevatedButton(
+            context: context,
+            text: "Upload Profile",
+            textSize: 18,
+            width: double.infinity,
+            function: () {
+              cubit.updateProfileImage();
+            },
+          ),
+          SizedBox(height: 5),
+          if (state is UploadProfileImageLoadingState)
+            LinearProgressIndicator(),
+        ],
+      );
+    } else if (cubit.coverImage != null) {
+      return Column(
+        children: [
+          SizedBox(height: 10),
+          defaultElevatedButton(
+            context: context,
+            width: double.infinity,
+            text: "Upload Cover",
+            textSize: 18,
+            function: () {
+              cubit.updateCoverImage();
+            },
+          ),
+          SizedBox(height: 5),
+          if (state is UploadCoverImageLoadingState) LinearProgressIndicator(),
+        ],
+      );
+    }
+    return SizedBox(height: 0);
   }
 }
