@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/shared/components/components.dart';
+import 'package:social_app/core/shared/local/cache_helper.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/states.dart';
+import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/modules/profile/edit_profile.dart';
 import 'package:social_app/styles/icon_broken.dart';
 
@@ -150,7 +152,8 @@ class ProfileScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
-                        navigateTo(context, EditProfileScreen());
+                        // CacheHelper.removeData(key: 'uId');
+                        // navigateTo(context, LoginScreen());
 
                       },
                       child: Text("Add Photos"),

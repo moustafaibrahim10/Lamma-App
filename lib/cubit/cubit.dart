@@ -59,7 +59,7 @@ class SocialCubit extends Cubit<SocialStates> {
   XFile? profileImage;
   var picker = ImagePicker();
 
-  Future getProfileImage() async {
+  Future uploadProfileImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       profileImage = XFile(pickedFile.path);
@@ -71,7 +71,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   XFile? coverImage;
 
-  Future getCoverImage() async {
+  Future uploadCoverImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       coverImage = XFile(pickedFile.path);
@@ -84,12 +84,16 @@ class SocialCubit extends Cubit<SocialStates> {
   //cloudinary
   final cloudinary = CloudinaryPublic("dadz62mgc", "lammaApp");
 
-  Future<String?> uploadToCloudinary(File file) async {
+  Future<String?> uploadToCloudinary(
+    File file, {
+    required String publicId,
+  }) async {
     try {
       CloudinaryResponse response = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(
           file.path,
           resourceType: CloudinaryResourceType.Image,
+          publicId: publicId,
         ),
       );
       return response.secureUrl;
@@ -99,47 +103,56 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  //upload photo
-  void uploadProfileImage() async {
-    if (profileImage == null) return;
+  //updateUserData
+  void updateUserData({
+    required String name,
+    required String bio,
+    required String phone,
+    required String email,
+  }) async
+  {
+    emit(UpdateUserDataLoadingState());
+    var profileUrl = userModel?.image;
+    var coverUrl = userModel?.cover;
 
-    emit(UploadProfileImageLoadingState());
+    if (profileImage != null)
+      profileUrl = await uploadToCloudinary(
+        File(profileImage!.path),
+        publicId: "users/${userModel?.uId}_profile",
+      );
 
-    final url = await uploadToCloudinary(File(profileImage!.path));
-    if (url != null) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(AppConstants.uId)
-          .update({'image': url})
-          .then((value) {
-            emit(UploadProfileImageSuccessState());
-          })
-          .catchError((error) {
-            emit(UploadProfileImageErrorState());
-            print(error);
-          });
-    }
-  }
+    if (coverImage != null)
+      coverUrl = await uploadToCloudinary(
+        File(coverImage!.path),
+        publicId: "users/${userModel?.uId}_cover",
+      );
 
-  //uploadCoverImage
-  void uploadCoverImage() async {
-    if (coverImage == null) return;
-
-    emit(UploadCoverImageLoadingState());
-
-    final url = await uploadToCloudinary(File(coverImage!.path));
-    if (url != null) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(AppConstants.uId)
-          .update({'cover': url})
-          .then((value) {
-            emit(UploadCoverImageSuccessState());
-          })
-          .catchError((error) {
-            emit(UploadCoverImageErrorState());
-            print(error);
-          });
-    }
+    UserModel model = UserModel(
+      uId: userModel?.uId,
+      name: name,
+      bio: bio,
+      phone: phone,
+      email: email,
+      image: profileUrl,
+      cover: coverUrl,
+      isEmailVerified: userModel?.isEmailVerified,
+      password: userModel?.password,
+    );
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(AppConstants.uId)
+        .update(model.toMap())
+        .then((value) {
+          // to apply changes
+          userModel = model;
+          //clean temp photos
+          profileImage=null;
+          coverImage=null;
+          emit(UpdateUserDataSuccessState());
+        })
+        .catchError((error) {
+          emit(UpdateUserDataErrorState());
+          print(error);
+        });
   }
 }
