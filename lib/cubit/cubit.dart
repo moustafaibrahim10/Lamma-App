@@ -57,8 +57,8 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   XFile? profileImage;
+  XFile? coverImage;
   var picker = ImagePicker();
-
   Future uploadProfileImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -68,9 +68,6 @@ class SocialCubit extends Cubit<SocialStates> {
       print("No Image Selected");
     emit(ProfileImagePickedErrorState());
   }
-
-  XFile? coverImage;
-
   Future uploadCoverImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
