@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/states.dart';
+import 'package:social_app/models/post_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/chats/chats_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
@@ -28,8 +29,8 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(AppConstants.uId)
         .get()
         .then((value) {
-      userModel = UserModel.fromJson(value.data()!);
-      emit(GetUserSuccessState());
+          userModel = UserModel.fromJson(value.data()!);
+          emit(GetUserSuccessState());
         })
         .catchError((error) {
           print("error");
@@ -86,9 +87,7 @@ class SocialCubit extends Cubit<SocialStates> {
   //cloudinary
   final cloudinary = CloudinaryPublic("dadz62mgc", "lammaApp");
 
-  Future<String?> uploadToCloudinary(
-    File file, {d,
-  }) async {
+  Future<String?> uploadToCloudinary(File file, {d}) async {
     try {
       CloudinaryResponse response = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(
@@ -106,9 +105,7 @@ class SocialCubit extends Cubit<SocialStates> {
   void updateProfileImage() async {
     if (profileImage == null) return;
     emit(UploadProfileImageLoadingState());
-    final imageUrl = await uploadToCloudinary(
-      File(profileImage!.path),
-    );
+    final imageUrl = await uploadToCloudinary(File(profileImage!.path));
     FirebaseFirestore.instance
         .collection('users')
         .doc(AppConstants.uId)
@@ -127,9 +124,7 @@ class SocialCubit extends Cubit<SocialStates> {
   void updateCoverImage() async {
     if (coverImage == null) return;
     emit(UploadCoverImageLoadingState());
-    final coverUrl = await uploadToCloudinary(
-      File(coverImage!.path),
-    );
+    final coverUrl = await uploadToCloudinary(File(coverImage!.path));
     FirebaseFirestore.instance
         .collection('users')
         .doc(AppConstants.uId)
@@ -175,6 +170,96 @@ class SocialCubit extends Cubit<SocialStates> {
         .catchError((error) {
           emit(UpdateUserDataErrorState());
           print(error);
+        });
+  }
+
+  //create post
+
+  XFile? newPostImage;
+
+  Future getPostImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      newPostImage = XFile(pickedFile.path);
+      emit(PostImagePickedSuccessState());
+    } else {
+      print("No Image Selected");
+      emit(PostImagePickedErrorState());
+    }
+  }
+
+  void removeNewPostImage() {
+    newPostImage = null;
+    emit(RemoveNewPostImageState());
+  }
+
+  String? postImage;
+
+  void createNewPost({required String dateTime, required String text}) async {
+    emit(CreatePostLoadingState());
+
+    if (newPostImage != null) {
+      postImage = await uploadToCloudinary(File(newPostImage!.path));
+    }
+    PostModel postModel = PostModel(
+      name: userModel?.name,
+      image: userModel?.image,
+      uId: userModel?.uId,
+      dateTime: dateTime,
+      text: text,
+      postImage: postImage ?? null,
+    );
+    FirebaseFirestore.instance
+        .collection("posts")
+        .add(postModel.toMap())
+        .then((value) {
+          emit(CreatePostSuccessState());
+        })
+        .catchError((error) {
+          emit(CreatePostErrorState());
+        });
+  }
+
+  List<PostModel> posts = [];
+  List<String> postsIds = [];
+  List<int> likes = [];
+
+  void getPosts() {
+    emit(GetPostsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .get()
+        .then((value) {
+          value.docs.forEach((element) {
+            element.reference
+                .collection('likes')
+                .get()
+                .then((value) {
+                  emit(GetPostsSuccessState());
+                  postsIds.add(element.id);
+                  likes.add(value.docs.length);
+                  posts.add(PostModel.fromJson(element.data()));
+                })
+                .catchError((error) {});
+          });
+        })
+        .catchError((error) {
+          emit(GetUserErrorState(error));
+        });
+  }
+
+  void likePost(String postId) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(AppConstants.uId)
+        .set({"like": true})
+        .then((value) {
+          emit(PostLikeSuccessState());
+        })
+        .catchError((error) {
+          emit(PostLikeErrorState(error));
         });
   }
 }
