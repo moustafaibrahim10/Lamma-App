@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
             scrolledUnderElevation: 0.0,
           ),
           scaffoldBackgroundColor: Colors.white,
+
           primaryColor: AppConstants.primaryColor,
           iconTheme: IconThemeData(color: AppConstants.primaryColor),
           outlinedButtonTheme: OutlinedButtonThemeData(
@@ -56,6 +57,11 @@ class MyApp extends StatelessWidget {
             color: AppConstants.primaryColor,
           ),
           fontFamily: "Jannah",
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: AppConstants.primaryColor,
+            selectionColor: AppConstants.primaryColor,
+            selectionHandleColor: AppConstants.primaryColor,
+          ),
           textTheme: TextTheme(
             headlineSmall: TextStyle(
               fontSize: 22,
@@ -86,6 +92,7 @@ class MyApp extends StatelessWidget {
               color: Colors.black45,
             ),
           ),
+
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             backgroundColor: Colors.white,
             type: BottomNavigationBarType.fixed,

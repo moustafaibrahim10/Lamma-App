@@ -12,7 +12,7 @@ import '../../core/shared/components/components.dart';
 import '../../core/utils/app_constants.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  TextEditingController commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -266,7 +266,9 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      showCommentsBottomSheet(context);
+                    },
                     child: Row(
                       children: [
                         CircleAvatar(
@@ -326,4 +328,134 @@ class HomeScreen extends StatelessWidget {
       ),
     ),
   );
+
+  Future showCommentsBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder:
+          (context) => StatefulBuilder(
+            builder:
+                (context, setState) => Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              topLeft: Radius.circular(20),
+                            ),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: ListView.separated(
+                              //shrinkWrap: true,
+                              //physics: NeverScrollableScrollPhysics(),
+                              itemBuilder:
+                                  (context, index) => Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[300],
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 20,
+                                                backgroundImage: NetworkImage(
+                                                  "${userModel!.image}",
+                                                ),
+                                              ),
+                                              SizedBox(width: 12),
+                                              Text(
+                                                "Love this",
+                                                style:
+                                                    Theme.of(
+                                                      context,
+                                                    ).textTheme.titleSmall,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              separatorBuilder:
+                                  (context, index) => SizedBox(height: 10),
+                              itemCount: 20,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+
+                            //   borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.all(8.0),
+
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundImage: NetworkImage(
+                                  "${userModel!.image}",
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: commentController,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Write a comment ...",
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {});
+                                  },cursorColor: AppConstants.primaryColor,
+
+                                ),
+                              ),
+
+                              if (commentController.text.isNotEmpty)
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    IconBroken.Send,
+                                    size: 20,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              if (commentController.text.isEmpty)
+                                Icon(
+                                  IconBroken.Send,
+                                  size: 20,
+                                  color: Colors.grey,
+                                ),
+                            ],
+                          ),
+                        ),
+                        // SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+          ),
+    );
+  }
 }
