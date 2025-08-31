@@ -59,8 +59,8 @@ class MyApp extends StatelessWidget {
           fontFamily: "Jannah",
           textSelectionTheme: TextSelectionThemeData(
             cursorColor: AppConstants.primaryColor,
-            selectionColor: AppConstants.primaryColor,
-            selectionHandleColor: AppConstants.primaryColor,
+            selectionColor: AppConstants.primaryColor.withOpacity(0.5),
+            selectionHandleColor: AppConstants.primaryColor.withOpacity(0.5),
           ),
           textTheme: TextTheme(
             headlineSmall: TextStyle(

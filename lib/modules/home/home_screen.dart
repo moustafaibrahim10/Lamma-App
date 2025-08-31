@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/core/utils/app_images.dart';
+import 'package:social_app/core/utils/enums.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/states.dart';
 import 'package:social_app/models/post_model.dart';
@@ -201,7 +202,7 @@ class HomeScreen extends StatelessWidget {
           //     ),
           //   ),
           // ),
-          if (model.postImage != '')
+          if (model.postImage != '' && model.postImage != null)
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Container(
@@ -267,7 +268,7 @@ class HomeScreen extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      showCommentsBottomSheet(context);
+                      showCommentsBottomSheet(context, cubit, index);
                     },
                     child: Row(
                       children: [
@@ -329,132 +330,208 @@ class HomeScreen extends StatelessWidget {
     ),
   );
 
-  Future showCommentsBottomSheet(BuildContext context) {
+  Future showCommentsBottomSheet(
+    BuildContext context,
+    SocialCubit cubit,
+    postIndex,
+  ) {
+    cubit.getComments(cubit.postsIds[postIndex]);
     return showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       context: context,
       builder:
-          (context) => StatefulBuilder(
-            builder:
-                (context, setState) => Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 0.6,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(20),
-                              topLeft: Radius.circular(20),
-                            ),
-                            color: Colors.white,
+          (context) => BlocBuilder<SocialCubit, SocialStates>(
+            builder: (context, state) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: ListView.separated(
-                              //shrinkWrap: true,
-                              //physics: NeverScrollableScrollPhysics(),
-                              itemBuilder:
-                                  (context, index) => Column(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300],
-                                          borderRadius: BorderRadius.circular(
-                                            20,
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: ConditionalBuilder(
+                            condition:
+                                cubit.comments[cubit.postsIds[postIndex]] !=
+                                null,
+                            builder:
+                                (context) => ListView.separated(
+                                  //shrinkWrap: true,
+                                  //physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, commentIndex) {
+                                    var postComments =
+                                        cubit.comments[cubit
+                                            .postsIds[postIndex]];
+                                    var comment = postComments?[commentIndex];
+                                    return Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
                                           ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 20,
-                                                backgroundImage: NetworkImage(
-                                                  "${userModel!.image}",
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundImage: NetworkImage(
+                                                    "${comment?.image}",
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(width: 12),
-                                              Text(
-                                                "Love this",
-                                                style:
-                                                    Theme.of(
-                                                      context,
-                                                    ).textTheme.titleSmall,
-                                              ),
-                                            ],
+                                                SizedBox(width: 12),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          "${comment?.name}",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium,
+                                                        ),
+                                                        SizedBox(width: 5),
+                                                        Text(
+                                                          "${comment?.date}",
+                                                          style: Theme.of(
+                                                                context,
+                                                              )
+                                                              .textTheme
+                                                              .labelSmall
+                                                              ?.copyWith(
+                                                                fontSize: 7,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    Text(
+                                                      "${comment?.comment}",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium
+                                                          ?.copyWith(
+                                                            color:
+                                                                Colors
+                                                                    .grey[700],
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (context, index) => SizedBox(height: 10),
+                                  itemCount:
+                                      cubit
+                                          .comments[cubit.postsIds[postIndex]]
+                                          ?.length ??
+                                      0,
+                                ),
+                            fallback:
+                                (context) => Center(
+                                  child: Text(
+                                    "No Comments Yet!",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 20,
+                                    ),
                                   ),
-                              separatorBuilder:
-                                  (context, index) => SizedBox(height: 10),
-                              itemCount: 20,
-                            ),
+                                ),
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
 
-                            //   borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: const EdgeInsets.all(8.0),
+                          //   borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
 
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundImage: NetworkImage(
-                                  "${userModel!.image}",
-                                ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(
+                                "${userModel!.image}",
                               ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: commentController,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Write a comment ...",
-                                  ),
-                                  onChanged: (value) {
-                                    setState(() {});
-                                  },cursorColor: AppConstants.primaryColor,
-
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: TextFormField(
+                                controller: commentController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Write a comment ...",
                                 ),
+                                onChanged: (value) {
+                                 (context as Element).markNeedsBuild();
+                                },
+                                cursorColor: AppConstants.primaryColor,
                               ),
+                            ),
 
-                              if (commentController.text.isNotEmpty)
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    IconBroken.Send,
-                                    size: 20,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              if (commentController.text.isEmpty)
-                                Icon(
+                            if (commentController.text.isNotEmpty)
+                              IconButton(
+                                onPressed: () {
+                                  cubit.commentPost(
+                                    cubit.postsIds[postIndex],
+                                    commentController.text,
+                                  );
+                                  commentController.clear();
+                                  showToast(
+                                    msg: "Comment added",
+                                    state: ToastState.success,
+                                  );
+                                  Focus.of(context).unfocus();
+                                },
+                                icon: Icon(
                                   IconBroken.Send,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.blue,
                                 ),
-                            ],
-                          ),
+                              ),
+                            if (commentController.text.isEmpty)
+                              Icon(
+                                IconBroken.Send,
+                                size: 20,
+                                color: Colors.grey,
+                              ),
+                          ],
                         ),
-                        // SizedBox(height: 20),
-                      ],
-                    ),
+                      ),
+                      // SizedBox(height: 20),
+                    ],
                   ),
                 ),
+              );
+            },
           ),
     );
   }

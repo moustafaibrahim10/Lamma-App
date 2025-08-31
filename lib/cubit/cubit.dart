@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/states.dart';
+import 'package:social_app/models/comment_model.dart';
 import 'package:social_app/models/post_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/chats/chats_screen.dart';
@@ -29,13 +30,13 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(AppConstants.uId)
         .get()
         .then((value) {
-          userModel = UserModel.fromJson(value.data()!);
-          emit(GetUserSuccessState());
-        })
+      userModel = UserModel.fromJson(value.data()!);
+      emit(GetUserSuccessState());
+    })
         .catchError((error) {
-          print("error");
-          emit(GetUserErrorState(error.toString()));
-        });
+      print("error");
+      emit(GetUserErrorState(error.toString()));
+    });
   }
 
   int currentIndex = 0;
@@ -111,14 +112,14 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(AppConstants.uId)
         .update({'image': imageUrl})
         .then((value) {
-          userModel = userModel?.copyWith(image: imageUrl);
-          emit(UploadProfileImageSuccessState());
-          profileImage = null;
-        })
+      userModel = userModel?.copyWith(image: imageUrl);
+      emit(UploadProfileImageSuccessState());
+      profileImage = null;
+    })
         .catchError((error) {
-          emit(UploadProfileImageErrorState());
-          print(error);
-        });
+      emit(UploadProfileImageErrorState());
+      print(error);
+    });
   }
 
   void updateCoverImage() async {
@@ -130,14 +131,14 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(AppConstants.uId)
         .update({'cover': coverUrl})
         .then((value) {
-          userModel = userModel?.copyWith(cover: coverUrl);
-          emit(UploadCoverImageSuccessState());
-          coverImage = null;
-        })
+      userModel = userModel?.copyWith(cover: coverUrl);
+      emit(UploadCoverImageSuccessState());
+      coverImage = null;
+    })
         .catchError((error) {
-          emit(UploadCoverImageErrorState());
-          print(error);
-        });
+      emit(UploadCoverImageErrorState());
+      print(error);
+    });
   }
 
   //updateUserData
@@ -160,17 +161,17 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(AppConstants.uId)
         .update(model.toMap())
         .then((value) {
-          // to apply changes
-          userModel = model;
-          //clean temp photos
-          profileImage = null;
-          coverImage = null;
-          emit(UpdateUserDataSuccessState());
-        })
+      // to apply changes
+      userModel = model;
+      //clean temp photos
+      profileImage = null;
+      coverImage = null;
+      emit(UpdateUserDataSuccessState());
+    })
         .catchError((error) {
-          emit(UpdateUserDataErrorState());
-          print(error);
-        });
+      emit(UpdateUserDataErrorState());
+      print(error);
+    });
   }
 
   //create post
@@ -213,11 +214,11 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection("posts")
         .add(postModel.toMap())
         .then((value) {
-          emit(CreatePostSuccessState());
-        })
+      emit(CreatePostSuccessState());
+    })
         .catchError((error) {
-          emit(CreatePostErrorState());
-        });
+      emit(CreatePostErrorState());
+    });
   }
 
   List<PostModel> posts = [];
@@ -230,22 +231,22 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection('posts')
         .get()
         .then((value) {
-          value.docs.forEach((element) {
-            element.reference
-                .collection('likes')
-                .get()
-                .then((value) {
-                  emit(GetPostsSuccessState());
-                  postsIds.add(element.id);
-                  likes.add(value.docs.length);
-                  posts.add(PostModel.fromJson(element.data()));
-                })
-                .catchError((error) {});
-          });
+      value.docs.forEach((element) {
+        element.reference
+            .collection('likes')
+            .get()
+            .then((value) {
+          emit(GetPostsSuccessState());
+          postsIds.add(element.id);
+          likes.add(value.docs.length);
+          posts.add(PostModel.fromJson(element.data()));
         })
+            .catchError((error) {});
+      });
+    })
         .catchError((error) {
-          emit(GetUserErrorState(error));
-        });
+      emit(GetUserErrorState(error));
+    });
   }
 
   void likePost(String postId) {
@@ -256,10 +257,41 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(AppConstants.uId)
         .set({"like": true})
         .then((value) {
-          emit(PostLikeSuccessState());
-        })
+      emit(PostLikeSuccessState());
+    })
         .catchError((error) {
-          emit(PostLikeErrorState(error));
-        });
+      emit(PostLikeErrorState(error));
+    });
+  }
+
+  void commentPost(String postId, String comment) {
+    CommentModel commentModel = CommentModel(
+        userModel?.name, userModel?.image, userModel?.uId, comment,
+        DateTime.now());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection("comments")
+        .add(commentModel.toMap()).then((value) {
+      emit(PostCommentSuccessState());
+    }).catchError((error) {
+      emit(PostCommentErrorState(error));
+    });
+  }
+  Map<String, List<CommentModel>> comments = {};
+
+  void getComments(String postId) {
+    emit(GetPostCommentLoadingState());
+    comments[postId] = [];
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .orderBy('date')
+        .snapshots()
+        .listen((event) {
+          comments[postId] = event.docs.map((e)=>CommentModel.fromJson(e.data())).toList();
+          emit(GetPostCommentSuccessState());
+    });
   }
 }
