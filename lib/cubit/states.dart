@@ -91,3 +91,14 @@ class GetPostCommentErrorState extends SocialStates {
 
   GetPostCommentErrorState(this.error);
 }
+
+//Get All Users
+class GetAllUsersLoadingState extends SocialStates {}
+
+class GetAllUsersSuccessState extends SocialStates {}
+
+class GetAllUsersErrorState extends SocialStates {
+  final String error;
+
+  GetAllUsersErrorState(this.error);
+}

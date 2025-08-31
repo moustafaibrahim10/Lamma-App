@@ -248,7 +248,7 @@ class HomeScreen extends StatelessWidget {
                           Icon(IconBroken.Chat, size: 18, color: Colors.amber),
                           SizedBox(width: 5),
                           Text(
-                            "0",
+                            "${cubit.comments[cubit.postsIds[index]]?.length}",
                             style: Theme.of(context).textTheme.labelSmall,
                           ),
                         ],
@@ -334,7 +334,8 @@ class HomeScreen extends StatelessWidget {
     BuildContext context,
     SocialCubit cubit,
     postIndex,
-  ) {
+  )
+  {
     cubit.getComments(cubit.postsIds[postIndex]);
     return showModalBottomSheet(
       isScrollControlled: true,
