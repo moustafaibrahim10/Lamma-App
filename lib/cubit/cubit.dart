@@ -50,8 +50,7 @@ class SocialCubit extends Cubit<SocialStates> {
   List<String> titles = ["Home", "Chats", "Posts", "Users", "Settings"];
 
   void chaneBottomNavIndex(int index) {
-    if(index == 1)
-      getAllUsers();
+    if (index == 1) getAllUsers();
     if (index == 2)
       emit(NewPostState());
     else {
@@ -226,9 +225,14 @@ class SocialCubit extends Cubit<SocialStates> {
   List<PostModel> posts = [];
   List<String> postsIds = [];
   List<int> likes = [];
+  List<bool> isLiked = [];
 
   void getPosts() {
     emit(GetPostsLoadingState());
+    posts.clear();
+    postsIds.clear();
+    likes.clear();
+    isLiked.clear();
     FirebaseFirestore.instance
         .collection('posts')
         .get()
@@ -243,6 +247,8 @@ class SocialCubit extends Cubit<SocialStates> {
                   likes.add(value.docs.length);
                   posts.add(PostModel.fromJson(element.data()));
                   getComments(element.id);
+                  final postLikes = value.docs.map((e) => e.id);
+                  isLiked.add(postLikes.contains(AppConstants.uId));
                 })
                 .catchError((error) {});
           });
@@ -252,15 +258,32 @@ class SocialCubit extends Cubit<SocialStates> {
         });
   }
 
-  void likePost(String postId) {
-    FirebaseFirestore.instance
+  void likePost(String postId, index) {
+    final likeRef = FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
         .collection('likes')
-        .doc(AppConstants.uId)
-        .set({"like": true})
+        .doc(AppConstants.uId);
+
+    likeRef
+        .get()
         .then((value) {
-          emit(PostLikeSuccessState());
+          if (value.exists) {
+            final currentLike = value.data()?['like'] ?? false;
+            likeRef.update({"like": !currentLike});
+            isLiked[index] = !currentLike;
+            if (!currentLike) {
+              likes[index]++;
+            } else {
+              likes[index]--;
+            }
+            emit(PostLikeSuccessState());
+          } else {
+            likeRef.set({"like": true});
+            isLiked[index] = true;
+            likes[index]++;
+            emit(PostLikeSuccessState());
+          }
         })
         .catchError((error) {
           emit(PostLikeErrorState(error));
@@ -312,21 +335,19 @@ class SocialCubit extends Cubit<SocialStates> {
   void getAllUsers() {
     emit(GetAllUsersLoadingState());
 
-    if(users.length==0)
-    FirebaseFirestore.instance
-        .collection('users')
-        .get()
-        .then((value) {
-          value.docs.forEach(
-            (element) {
-              if(element.id != AppConstants.uId)
+    if (users.length == 0)
+      FirebaseFirestore.instance
+          .collection('users')
+          .get()
+          .then((value) {
+            value.docs.forEach((element) {
+              if (element.id != AppConstants.uId)
                 users.add(UserModel.fromJson(element.data()));
-            },
-          );
-          emit(GetAllUsersSuccessState());
-        })
-        .catchError((error) {
-          emit(GetAllUsersErrorState(error));
-        });
+            });
+            emit(GetAllUsersSuccessState());
+          })
+          .catchError((error) {
+            emit(GetAllUsersErrorState(error));
+          });
   }
 }

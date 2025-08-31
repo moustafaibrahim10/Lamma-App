@@ -291,7 +291,19 @@ class HomeScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Icon(IconBroken.Heart, size: 18, color: Colors.red),
+                        cubit.isLiked[index]
+                            ? Icon(
+                          IconBroken.Heart,
+                          size: 18,
+                          color: Colors.red,
+
+                        )
+                            : Icon(
+                          IconBroken.Heart,
+                          size: 18,
+                          color: Colors.grey,
+
+                        ),
                         SizedBox(width: 5),
                         Text(
                           "Like",
@@ -301,7 +313,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    cubit.likePost(cubit.postsIds[index]);
+                    cubit.likePost(cubit.postsIds[index],index);
                   },
                 ),
                 SizedBox(width: 20),
