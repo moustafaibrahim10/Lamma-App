@@ -6,6 +6,7 @@ import 'package:social_app/models/user_model.dart';
 
 import '../../core/shared/components/components.dart';
 import '../../cubit/cubit.dart';
+import 'chat_details_screen.dart';
 
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({super.key});
@@ -35,7 +36,9 @@ class ChatsScreen extends StatelessWidget {
 
   Widget buildChatItem(BuildContext context, UserModel user) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        navigateTo(context, ChatDetailsScreen(user:user));
+      },
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(
