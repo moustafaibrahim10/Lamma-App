@@ -28,7 +28,7 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.instance.requestPermission();
   FirebaseMessaging.onMessage.listen((event) {
-    print("Success");
+    print("Success $event");
   }).onError((error) {
     print("error is $error");
   });
