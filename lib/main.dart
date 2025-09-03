@@ -9,19 +9,45 @@ import 'package:social_app/layout/social_layout.dart';
 import 'cubit/bloc_observer.dart';
 import 'modules/login/login_screen.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart'; // 👈
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/core/shared/local/cache_helper.dart';
+import 'package:social_app/core/utils/app_constants.dart';
+import 'package:social_app/cubit/cubit.dart';
+import 'package:social_app/layout/social_layout.dart';
+import 'cubit/bloc_observer.dart';
+import 'modules/login/login_screen.dart';
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
+
   await Firebase.initializeApp();
+  FirebaseMessaging.instance.requestPermission();
+  FirebaseMessaging.instance.getToken().then((token) {
+    print("FCM Token: $token"); // هتلاقيه في الـ debug console
+  });
+
+  // استقبال الرسالة لو الاب مفتوح
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("Message: ${message.notification?.title} - ${message.notification?.body}");
+  });
+
   await CacheHelper.init();
   AppConstants.uId = CacheHelper.getData(key: "uId");
+
   Widget widget = LoginScreen();
   if (AppConstants.uId != null) {
     widget = SocialLayout();
   }
 
   runApp(MyApp(startWidget: widget));
+
 }
+
 
 class MyApp extends StatelessWidget {
   final Widget startWidget;
