@@ -27,14 +27,12 @@ void main() async {
 
   await Firebase.initializeApp();
   FirebaseMessaging.instance.requestPermission();
-  FirebaseMessaging.instance.getToken().then((token) {
-    print("FCM Token: $token"); // هتلاقيه في الـ debug console
+  FirebaseMessaging.onMessage.listen((event) {
+    print("Success");
+  }).onError((error) {
+    print("error is $error");
   });
 
-  // استقبال الرسالة لو الاب مفتوح
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("Message: ${message.notification?.title} - ${message.notification?.body}");
-  });
 
   await CacheHelper.init();
   AppConstants.uId = CacheHelper.getData(key: "uId");
@@ -45,7 +43,6 @@ void main() async {
   }
 
   runApp(MyApp(startWidget: widget));
-
 }
 
 
@@ -58,7 +55,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SocialCubit()..getUserData()..getPosts(),
+      create: (context) =>
+      SocialCubit()
+        ..getUserData()
+        ..getPosts(),
       child: MaterialApp(
         title: 'Lamma',
         theme: ThemeData(
