@@ -25,9 +25,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
 
-
-
-
   await Firebase.initializeApp();
   FirebaseMessaging.instance.requestPermission();
   FirebaseMessaging.onMessage.listen((event) {
