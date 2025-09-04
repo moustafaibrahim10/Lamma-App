@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:social_app/core/shared/local/cache_helper.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/cubit.dart';
@@ -20,19 +21,53 @@ import 'package:social_app/layout/social_layout.dart';
 import 'cubit/bloc_observer.dart';
 import 'modules/login/login_screen.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
 
   await Firebase.initializeApp();
   FirebaseMessaging.instance.requestPermission();
-  FirebaseMessaging.onMessage.listen((event) {
-    print("Success $event");
-  }).onError((error) {
-    print("error is $error");
-  });
 
+  const AndroidInitializationSettings androidInitializationSettings =
+  AndroidInitializationSettings('@mipmap/ic_launcher');
+  await flutterLocalNotificationsPlugin.initialize(
+      InitializationSettings(android: androidInitializationSettings)
+  );
+
+  //App is open -- Foreground
+  FirebaseMessaging.onMessage
+      .listen((event) {
+        print(event.data.toString());
+        flutterLocalNotificationsPlugin.show(
+          0,
+          event.notification?.title,
+          event.notification?.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'default_channel',
+              "Default",
+              channelDescription: 'This channel is used for important notifications.',
+              importance: Importance.high,
+              priority: Priority.high,
+            ),
+          ),
+        );
+      })
+      .onError((error) {
+        print("error is $error");
+      });
+
+  //App is open -- Background
+  FirebaseMessaging.onMessageOpenedApp
+      .listen((event) {
+        print(event.data.toString());
+      })
+      .onError((error) {
+        print(error);
+      });
 
   await CacheHelper.init();
   AppConstants.uId = CacheHelper.getData(key: "uId");
@@ -45,7 +80,6 @@ void main() async {
   runApp(MyApp(startWidget: widget));
 }
 
-
 class MyApp extends StatelessWidget {
   final Widget startWidget;
 
@@ -55,10 +89,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-      SocialCubit()
-        ..getUserData()
-        ..getPosts(),
+      create:
+          (context) =>
+              SocialCubit()
+                ..getUserData()
+                ..getPosts(),
       child: MaterialApp(
         title: 'Lamma',
         theme: ThemeData(
