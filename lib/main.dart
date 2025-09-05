@@ -24,6 +24,10 @@ import 'modules/login/login_screen.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
+  print("Handling a background message: ${message.messageId}");
+}
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
@@ -60,14 +64,17 @@ Future<void> main() async {
         print("error is $error");
       });
 
-  //App is open -- Background
+  //Detect click on notification and open app from background
   FirebaseMessaging.onMessageOpenedApp
       .listen((event) {
-        print(event.data.toString());
+        print("onMessageOpenedApp");
       })
       .onError((error) {
         print(error);
       });
+
+  //Background
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   await CacheHelper.init();
   AppConstants.uId = CacheHelper.getData(key: "uId");
@@ -95,7 +102,6 @@ class MyApp extends StatelessWidget {
                 ..getUserData()
                 ..getPosts(),
       child: MaterialApp(
-        title: 'Lamma',
         theme: ThemeData(
           appBarTheme: AppBarTheme(
             color: Colors.white,

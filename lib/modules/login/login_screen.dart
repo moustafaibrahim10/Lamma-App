@@ -39,7 +39,7 @@ class LoginScreen extends StatelessWidget {
         builder: (context, state) {
           LoginCubit cubit = LoginCubit.get(context);
           return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar( ),
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
