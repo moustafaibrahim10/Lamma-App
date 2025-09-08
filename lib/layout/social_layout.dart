@@ -41,7 +41,7 @@ class SocialLayout extends StatelessWidget {
           body: cubit.screens[cubit.currentIndex],
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.flip,
-
+            height: 40,
             onTap: (index) {
               cubit.chaneBottomNavIndex(index);
             },
