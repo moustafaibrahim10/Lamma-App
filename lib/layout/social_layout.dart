@@ -1,4 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,31 +39,37 @@ class SocialLayout extends StatelessWidget {
             ],
           ),
           body: cubit.screens[cubit.currentIndex],
-          bottomNavigationBar: BottomNavigationBar(
+          bottomNavigationBar: ConvexAppBar(
+            style: TabStyle.flip,
+
             onTap: (index) {
               cubit.chaneBottomNavIndex(index);
             },
-            currentIndex: cubit.currentIndex,
+            color: Colors.grey,
+          elevation: 4.0,
+            activeColor: Colors.blue,
+            initialActiveIndex: cubit.currentIndex,
+            backgroundColor: Colors.white,
             items: [
-              BottomNavigationBarItem(
-                icon: Icon(IconBroken.Home),
-                label: "Home",
+              TabItem(
+                icon: Icon(IconBroken.Home,),
+                title: "Home",
               ),
-              BottomNavigationBarItem(
-                icon: Icon(IconBroken.Chat),
-                label: "Chat",
+              TabItem(
+                icon: Icon(IconBroken.Chat,),
+                title: "Chat",
               ),
-              BottomNavigationBarItem(
+              TabItem(
                 icon: Icon(IconBroken.Paper_Upload),
-                label: "Post",
+                title: "Post",
               ),
-              BottomNavigationBarItem(
-                icon: Icon(IconBroken.Location),
-                label: "Users",
+              TabItem(
+                icon: Icon(IconBroken.Location,),
+                title: "Users",
               ),
-              BottomNavigationBarItem(
+              TabItem(
                 icon: Icon(IconBroken.Profile),
-                label: "Profile",
+                title: "Profile",
               ),
             ],
           ),
