@@ -5,6 +5,7 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_app/core/services/location_service.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/states.dart';
 import 'package:social_app/models/chat_model.dart';
@@ -50,8 +51,30 @@ class SocialCubit extends Cubit<SocialStates> {
   ];
   List<String> titles = ["Home", "Chats", "Posts", "Users", "Settings"];
 
-  void chaneBottomNavIndex(int index) {
-    if (index == 1) getAllUsers();
+  void chaneBottomNavIndex(int index) async {
+    if (index == 1) {
+      getAllUsers();
+      LocationService locationService = LocationService();
+      try{
+        var pos= await locationService.getUserLocation();
+        if(pos != null){
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(AppConstants.uId)
+              .update({
+            "lat":pos.latitude,
+            "long":pos.longitude,
+          });
+          emit(UpdateUserLocationSuccessState());
+        }
+      }catch(e){
+        emit(UpdateUserLocationErrorState(e.toString()));
+      }
+
+    }
+    if (index == 2) {
+      getPosts();
+    };
     if (index == 2)
       emit(NewPostState());
     else {

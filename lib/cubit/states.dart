@@ -117,3 +117,11 @@ class ReceiveMessageErrorState extends SocialStates {
 
 //Get Messages
 class GetMessageSuccessState extends SocialStates {}
+
+//Location
+class UpdateUserLocationSuccessState extends SocialStates{}
+class UpdateUserLocationErrorState extends SocialStates{
+  final String error;
+
+  UpdateUserLocationErrorState(this.error);
+}
