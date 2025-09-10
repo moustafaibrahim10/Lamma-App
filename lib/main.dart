@@ -7,6 +7,7 @@ import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/layout/social_layout.dart';
 
+import 'core/services/location_service.dart';
 import 'cubit/bloc_observer.dart';
 import 'modules/login/login_screen.dart';
 
@@ -32,6 +33,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
 
+  LocationService locationService = LocationService();
+  try{
+   await locationService.getUserLocation();
+  }catch(e){
+    print("error is $e");
+  }
   await Firebase.initializeApp();
   FirebaseMessaging.instance.requestPermission();
 

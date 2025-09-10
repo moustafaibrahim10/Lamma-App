@@ -5,7 +5,7 @@ class LocationService {
   Future<Position?> getUserLocation() async {
     //check service is enabled
     bool serviceEnable = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnable) return null;
+    if (!serviceEnable)     throw Exception("GPS service is disabled");
     //request Permission
     var status = await Permission.location.request();
     if (status.isGranted) {
@@ -13,11 +13,11 @@ class LocationService {
         desiredAccuracy: LocationAccuracy.high,
       );
     } else if (status.isDenied)
-      return null;
+      throw Exception("Location permission denied");
     else if (status.isPermanentlyDenied)
       {
         await openAppSettings();
-        return null;
+        throw Exception("Location permission permanently denied");
       }
     return null;
   }

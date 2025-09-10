@@ -8,6 +8,8 @@ class UserModel {
   String? cover;
   String? bio;
   bool? isEmailVerified;
+  double?lat;
+  double? long;
 
   UserModel({
     this.name,
@@ -18,7 +20,9 @@ class UserModel {
     this.isEmailVerified,
     this.image,
     this.bio,
-    this.cover
+    this.cover,
+    this.lat,
+    this.long,
   });
 
   UserModel copyWith ({
@@ -31,6 +35,8 @@ class UserModel {
     final String? cover,
     final String? bio,
     final bool? isEmailVerified,
+    final double? lat,
+    final double? long,
 }){
     return UserModel(
       name: name ?? this.name,
@@ -42,6 +48,8 @@ class UserModel {
       cover: cover ?? this.cover,
       bio: bio ?? this.bio,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+      lat: lat ?? this.lat ,
+      long: long??this.long,
     );
 }
 
@@ -55,6 +63,8 @@ class UserModel {
     image = json["image"];
     bio=json["bio"];
     cover=json["cover"];
+    lat = json["lat"];
+    long = json["long"];
   }
 
   Map<String, dynamic> toMap() {
@@ -67,7 +77,9 @@ class UserModel {
       "isEmailVerified": isEmailVerified,
       "image": image,
       "bio":bio,
-      "cover":cover
+      "cover":cover,
+      "lat": lat,
+      "long":long,
     };
   }
 }
