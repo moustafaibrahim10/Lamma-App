@@ -2,15 +2,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationService {
-  Future<Position?> getUserLocation() async {
 
+  Future getUserLocation() async {
+    //Permission check
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if(!serviceEnabled)
       return null;
-
     //request permission
     var status = await Permission.location.request();
-    if (status.isGranted)
+    if(status.isGranted)
       return Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high
       );
@@ -18,7 +18,7 @@ class LocationService {
       return null;
     else if(status.isPermanentlyDenied)
       {
-       await openAppSettings();
+        await openAppSettings();
         return null;
       }
     return null;
