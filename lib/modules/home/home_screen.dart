@@ -293,17 +293,15 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         cubit.isLiked[index]
                             ? Icon(
-                          IconBroken.Heart,
-                          size: 18,
-                          color: Colors.red,
-
-                        )
+                              IconBroken.Heart,
+                              size: 18,
+                              color: Colors.red,
+                            )
                             : Icon(
-                          IconBroken.Heart,
-                          size: 18,
-                          color: Colors.grey,
-
-                        ),
+                              IconBroken.Heart,
+                              size: 18,
+                              color: Colors.grey,
+                            ),
                         SizedBox(width: 5),
                         Text(
                           "Like",
@@ -313,7 +311,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    cubit.likePost(cubit.postsIds[index],index);
+                    cubit.likePost(cubit.postsIds[index], index);
                   },
                 ),
                 SizedBox(width: 20),
@@ -346,8 +344,7 @@ class HomeScreen extends StatelessWidget {
     BuildContext context,
     SocialCubit cubit,
     postIndex,
-  )
-  {
+  ) {
     cubit.getComments(cubit.postsIds[postIndex]);
     return showModalBottomSheet(
       isScrollControlled: true,
@@ -504,7 +501,7 @@ class HomeScreen extends StatelessWidget {
                                   hintText: "Write a comment ...",
                                 ),
                                 onChanged: (value) {
-                                 (context as Element).markNeedsBuild();
+                                  (context as Element).markNeedsBuild();
                                 },
                                 cursorColor: AppConstants.primaryColor,
                               ),
