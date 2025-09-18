@@ -10,6 +10,7 @@ import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/states.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
+import 'package:social_app/modules/search/search_screen.dart';
 import 'package:social_app/styles/icon_broken.dart';
 
 class SocialLayout extends StatelessWidget {
@@ -34,8 +35,12 @@ class SocialLayout extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             actions: [
-              IconButton(onPressed: () {}, icon: Icon(IconBroken.Notification)),
-              IconButton(onPressed: () {}, icon: Icon(IconBroken.Search)),
+              IconButton(onPressed: () {
+              }, icon: Icon(IconBroken.Notification)),
+              IconButton(onPressed: () {
+                navigateTo(context, SearchScreen());
+
+              }, icon: Icon(IconBroken.Search)),
             ],
           ),
           body: cubit.screens[cubit.currentIndex],

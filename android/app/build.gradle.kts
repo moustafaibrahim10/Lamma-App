@@ -1,3 +1,16 @@
+import java.util.Properties
+
+// هذا الكود يقرأ ملف local.properties ويستخرج منه المفتاح
+val localProperties = Properties()
+// تأكد من أن local.properties موجود في المجلد الجذر لمشروع الأندرويد (عادةً مجلد android في مشروع Flutter)
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.reader().use { reader ->
+        localProperties.load(reader)
+    }
+}
+val mapsApiKey: String? = localProperties.getProperty("googleMapsApiKey")
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -35,6 +48,7 @@ android {
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
         }
+        manifestPlaceholders["googleMapsApiKey"] = mapsApiKey ?: "" // تأكد أن هذا السطر موجود ومطابق
     }
 
     buildTypes {
