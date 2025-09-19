@@ -125,3 +125,7 @@ class UpdateUserLocationErrorState extends SocialStates{
 
   UpdateUserLocationErrorState(this.error);
 }
+
+//search
+class SearchSuccessState extends SocialStates{}
+class SearchErrorState extends SocialStates{}

@@ -55,26 +55,23 @@ class SocialCubit extends Cubit<SocialStates> {
     if (index == 1) {
       getAllUsers();
       LocationService locationService = LocationService();
-      try{
-        var pos= await locationService.getUserLocation();
-        if(pos != null){
+      try {
+        var pos = await locationService.getUserLocation();
+        if (pos != null) {
           FirebaseFirestore.instance
               .collection('users')
               .doc(AppConstants.uId)
-              .update({
-            "lat":pos.latitude,
-            "long":pos.longitude,
-          });
+              .update({"lat": pos.latitude, "long": pos.longitude});
           emit(UpdateUserLocationSuccessState());
         }
-      }catch(e){
+      } catch (e) {
         emit(UpdateUserLocationErrorState(e.toString()));
       }
-
     }
     if (index == 2) {
       getPosts();
-    };
+    }
+    ;
     if (index == 2)
       emit(NewPostState());
     else {
@@ -375,10 +372,7 @@ class SocialCubit extends Cubit<SocialStates> {
           });
   }
 
-  void sendMessage({
-    required String receiverId,
-    required String text,
-  }) {
+  void sendMessage({required String receiverId, required String text}) {
     ChatModel model = ChatModel(
       dateTime: Timestamp.now(),
       receiverId: receiverId,
@@ -431,6 +425,27 @@ class SocialCubit extends Cubit<SocialStates> {
             messages.add(ChatModel.fromJson(element.data()));
           });
           emit(GetMessageSuccessState());
+        });
+  }
+
+  List<UserModel> userSearch = [];
+
+  Future<void> searchUser(String name) async {
+    userSearch.clear();
+    final snapShot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('name', isGreaterThanOrEqualTo: name)
+        .where('name', isLessThanOrEqualTo: name + '\uf8ff')
+        .get()
+        .then((value) {
+          value.docs.forEach((element) {
+            if (element.id != userModel?.uId)
+              userSearch.add(UserModel.fromJson(element.data()));
+          });
+          emit(SearchSuccessState());
+        })
+        .catchError((error) {
+          emit(SearchErrorState());
         });
   }
 }
