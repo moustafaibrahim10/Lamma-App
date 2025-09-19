@@ -254,7 +254,9 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      showCommentsBottomSheet(context, cubit, index);
+                    },
                   ),
                 ),
               ),
