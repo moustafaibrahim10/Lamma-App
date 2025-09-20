@@ -432,6 +432,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   Future<void> searchUser(String name) async {
     userSearch.clear();
+    emit(SearchLoadingState());
     final snapShot = await FirebaseFirestore.instance
         .collection('users')
         .where('name', isGreaterThanOrEqualTo: name)

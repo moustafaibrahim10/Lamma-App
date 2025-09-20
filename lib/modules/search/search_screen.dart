@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/core/utils/app_constants.dart';
@@ -37,43 +38,56 @@ class SearchScreen extends StatelessWidget {
                 else
                   return null;
               },
-              submited: (value){
+              submited: (value) {
                 cubit.searchUser(value);
                 return null;
-              }
+              },
             ),
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              children: [
-                InkWell(
-                  onTap: () {},
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          userModel!.image.toString(),
-                        ),
-                        radius: 30.0,
-                      ),
-                      SizedBox(width: 20.0),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(userModel!.name.toString()),
-                          SizedBox(height: 10.0),
-                          Text(
-                            userModel!.bio.toString(),
-                            style: Theme.of(context).textTheme.labelSmall,
+          body: ConditionalBuilder(
+            condition: state is SearchSuccessState,
+            builder:
+                (context) => Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: ListView.separated(
+                    itemBuilder:
+                        (context, index) => InkWell(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  cubit.userSearch[index].image.toString(),
+                                ),
+                                radius: 30.0,
+                              ),
+                              SizedBox(width: 20.0),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(cubit.userSearch[index].name.toString()),
+                                  SizedBox(height: 10.0),
+                                  Text(
+                                    cubit.userSearch[index].bio.toString(),
+                                    style:
+                                        Theme.of(context).textTheme.labelSmall,
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                    separatorBuilder: (context, index) => myDivider(),
+                    itemCount: cubit.userSearch.length,
                   ),
                 ),
-              ],
-            ),
+            fallback:
+                (context) =>
+                    state is SearchLoadingState
+                        ? Center(child: CircularProgressIndicator())
+                        : Center(
+                          child: Container(child: Text("Enter a name to want to search for! ")),
+                        ),
           ),
         );
       },

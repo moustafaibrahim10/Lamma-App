@@ -127,5 +127,6 @@ class UpdateUserLocationErrorState extends SocialStates{
 }
 
 //search
+class SearchLoadingState extends SocialStates{}
 class SearchSuccessState extends SocialStates{}
 class SearchErrorState extends SocialStates{}
