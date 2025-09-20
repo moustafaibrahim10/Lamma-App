@@ -37,7 +37,10 @@ class SearchScreen extends StatelessWidget {
                 else
                   return null;
               },
-
+              submited: (value){
+                cubit.searchUser(value);
+                return null;
+              }
             ),
           ),
           body: Padding(

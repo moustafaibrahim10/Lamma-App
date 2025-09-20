@@ -11,6 +11,7 @@ Widget defaultTextFormField({
   required String labelText,
   required IconData icon,
   required String? validate(String)?,
+   String? submited(String)?,
   Widget? suffixIcon,
   bool? obscureText = false,
 }) => TextFormField(
@@ -39,6 +40,7 @@ Widget defaultTextFormField({
     ),
     floatingLabelStyle: TextStyle(color: AppConstants.primaryColor),
   ),
+  onFieldSubmitted:submited ,
   validator: validate,
 );
 
