@@ -70,6 +70,7 @@ class LoginScreen extends StatelessWidget {
                       defaultTextFormField(
                         controller: emailController,
                         icon: Icons.email,
+                        keyboardType: TextInputType.emailAddress,
                         labelText: "Email",
                         validate: (value) {
                           if (value == null || value.isEmpty)

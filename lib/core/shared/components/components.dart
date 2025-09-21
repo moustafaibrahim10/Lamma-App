@@ -11,13 +11,15 @@ Widget defaultTextFormField({
   required String labelText,
   required IconData icon,
   required String? validate(String)?,
-   String? submited(String)?,
+  String? submited(String)?,
+  TextInputType? keyboardType = TextInputType.text,
   Widget? suffixIcon,
   bool? obscureText = false,
 }) => TextFormField(
   controller: controller,
   cursorColor: AppConstants.primaryColor,
   obscureText: obscureText!,
+  keyboardType:keyboardType ,
   decoration: InputDecoration(
     prefixIcon: Icon(icon),
     suffixIcon: suffixIcon,
@@ -40,7 +42,7 @@ Widget defaultTextFormField({
     ),
     floatingLabelStyle: TextStyle(color: AppConstants.primaryColor),
   ),
-  onFieldSubmitted:submited ,
+  onFieldSubmitted: submited,
   validator: validate,
 );
 
@@ -82,7 +84,7 @@ Future<bool?> showToast({required String msg, required ToastState state}) =>
 Color _chooseToastColor({required ToastState state}) {
   switch (state) {
     case ToastState.success:
-      return Colors.green;
+      return Colors.blue;
     case ToastState.warring:
       return Colors.yellow;
     case ToastState.error:

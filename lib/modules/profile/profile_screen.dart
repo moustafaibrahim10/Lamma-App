@@ -9,6 +9,9 @@ import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/modules/profile/edit_profile.dart';
 import 'package:social_app/styles/icon_broken.dart';
 
+import '../../core/utils/enums.dart';
+import '../new_post/new_post_screen.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -152,19 +155,37 @@ class ProfileScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
-                        // CacheHelper.removeData(key: 'uId');
-                        // navigateTo(context, LoginScreen());
-
+                        navigateTo(context, EditProfileScreen());
                       },
-                      child: Text("Add Photos"),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                        Text("Edit Profile", style: TextStyle(fontSize: 14),),
+                        SizedBox(width: 10.0),
+                        Icon(IconBroken.Edit, size: 14),
+                      ],),
                     ),
                   ),
                   SizedBox(width: 10.0),
                   OutlinedButton(
                     onPressed: () {
-                      navigateTo(context, EditProfileScreen());
                     },
-                    child: Icon(IconBroken.Edit, size: 14),
+                    child: Icon(Icons.brightness_4_outlined, size: 14 ),
+                  ),
+                  SizedBox(width: 10.0),
+                  OutlinedButton(
+                    onPressed: () {
+                      navigateTo(context, LoginScreen());
+                      CacheHelper.removeData(key: "uId").then((value){
+                        if(value){
+                          showToast(
+                            msg: "Logout done successfully",
+                            state: ToastState.success,
+                          );
+                        }
+                      });
+                    },
+                    child: Icon(IconBroken.Logout, size: 14),
                   ),
                 ],
               ),
