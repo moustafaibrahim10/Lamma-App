@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:social_app/core/shared/local/cache_helper.dart';
+import 'package:social_app/core/styles.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/cubit.dart';
+import 'package:social_app/cubit/states.dart';
 import 'package:social_app/layout/social_layout.dart';
 
 import 'core/services/location_service.dart';
@@ -23,20 +25,20 @@ import 'cubit/bloc_observer.dart';
 import 'modules/login/login_screen.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin();
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-
   print("Handling a background message: ${message.messageId}");
 }
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
 
   LocationService locationService = LocationService();
-  try{
-   await locationService.getUserLocation();
-  }catch(e){
+  try {
+    await locationService.getUserLocation();
+  } catch (e) {
     print("error is $e");
   }
   await Firebase.initializeApp();
@@ -45,40 +47,41 @@ Future<void> main() async {
   const AndroidInitializationSettings androidInitializationSettings =
   AndroidInitializationSettings('@mipmap/ic_launcher');
   await flutterLocalNotificationsPlugin.initialize(
-      InitializationSettings(android: androidInitializationSettings)
+    InitializationSettings(android: androidInitializationSettings),
   );
 
   //App is open -- Foreground
   FirebaseMessaging.onMessage
       .listen((event) {
-        print(event.data.toString());
-        flutterLocalNotificationsPlugin.show(
-          0,
-          event.notification?.title,
-          event.notification?.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              'default_channel',
-              "Default",
-              channelDescription: 'This channel is used for important notifications.',
-              importance: Importance.high,
-              priority: Priority.high,
-            ),
-          ),
-        );
-      })
+    print(event.data.toString());
+    flutterLocalNotificationsPlugin.show(
+      0,
+      event.notification?.title,
+      event.notification?.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'default_channel',
+          "Default",
+          channelDescription:
+          'This channel is used for important notifications.',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+      ),
+    );
+  })
       .onError((error) {
-        print("error is $error");
-      });
+    print("error is $error");
+  });
 
   //Detect click on notification and open app from background
   FirebaseMessaging.onMessageOpenedApp
       .listen((event) {
-        print("onMessageOpenedApp");
-      })
+    print("onMessageOpenedApp");
+  })
       .onError((error) {
-        print(error);
-      });
+    print(error);
+  });
 
   //Background
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
@@ -105,78 +108,20 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create:
           (context) =>
-              SocialCubit()
-                ..getUserData()
-                ..getPosts(),
-      child: MaterialApp(
-        theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            color: Colors.white,
-            scrolledUnderElevation: 0.0,
-          ),
-          scaffoldBackgroundColor: Colors.white,
-
-          primaryColor: AppConstants.primaryColor,
-          iconTheme: IconThemeData(color: AppConstants.primaryColor),
-          outlinedButtonTheme: OutlinedButtonThemeData(
-            style: OutlinedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              side: BorderSide(color: Colors.grey, width: 1),
-              foregroundColor: AppConstants.primaryColor,
-            ),
-          ),
-          progressIndicatorTheme: ProgressIndicatorThemeData(
-            color: AppConstants.primaryColor,
-          ),
-          fontFamily: "Jannah",
-          textSelectionTheme: TextSelectionThemeData(
-            cursorColor: AppConstants.primaryColor,
-            selectionColor: AppConstants.primaryColor.withOpacity(0.5),
-            selectionHandleColor: AppConstants.primaryColor.withOpacity(0.5),
-          ),
-          textTheme: TextTheme(
-            headlineSmall: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            bodyLarge: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              height: 1.4,
-            ),
-
-            bodyMedium: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              height: 1.4,
-            ),
-            labelSmall: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              color: Colors.black45,
-            ),
-            titleSmall: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.black45,
-            ),
-          ),
-
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            backgroundColor: Colors.white,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: AppConstants.primaryColor,
-
-            elevation: 20,
-          ),
-        ),
-        home: startWidget,
-        debugShowCheckedModeBanner: false,
+      SocialCubit()
+        ..getUserData()
+        ..getPosts(),
+      child: BlocConsumer<SocialCubit, SocialStates>(
+        listener: (context, state) {
+        },
+        builder: (context, state) {
+          SocialCubit cubit = SocialCubit.get(context);
+          return MaterialApp(
+            theme:cubit.isDark ? darkTheme : lightTheme,
+            home: startWidget,
+            debugShowCheckedModeBanner: false,
+          );
+        },
       ),
     );
   }

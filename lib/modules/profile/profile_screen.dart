@@ -169,6 +169,7 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(width: 10.0),
                   OutlinedButton(
                     onPressed: () {
+                      cubit.changeAppMode();
                     },
                     child: Icon(Icons.brightness_4_outlined, size: 14 ),
                   ),

@@ -21,7 +21,7 @@ Widget defaultTextFormField({
   obscureText: obscureText!,
   keyboardType:keyboardType ,
   decoration: InputDecoration(
-    prefixIcon: Icon(icon),
+    prefixIcon: Icon(icon,color: Colors.grey,),
     suffixIcon: suffixIcon,
     labelText: labelText,
     enabledBorder: OutlineInputBorder(
@@ -130,9 +130,9 @@ PreferredSizeWidget defaultAppBar({
     onPressed: () {
       Navigator.pop(context);
     },
-    icon: Icon(IconBroken.Arrow___Left_2),
+    icon: Icon(IconBroken.Arrow___Left_2,color: Colors.grey,),
   ),
   titleSpacing: 3.0,
-  title: title != null && title.isNotEmpty ? Text(title) : null,
+  title: title != null && title.isNotEmpty ? Text(title,style: Theme.of(context).textTheme.headlineSmall,) : null,
   actions: actions,
 );

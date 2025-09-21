@@ -29,7 +29,7 @@ class ChatDetailsScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(IconBroken.Arrow___Left_2),
+                  icon: Icon(IconBroken.Arrow___Left_2,color: Colors.grey),
                 ),
                 titleSpacing: 0.0,
                 title: Row(
@@ -46,119 +46,142 @@ class ChatDetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              body:ConditionalBuilder(
-                  condition: cubit.messages.length > 0 && cubit.messages.isNotEmpty,
-                  builder: (context)=>Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: ListView.separated(
-                            itemBuilder: (context,index){
-                             if(cubit.messages[index].senderId == AppConstants.uId)
-                               return buildMyMessage(cubit.messages[index],context);
-                             return buildMessage(cubit.messages[index],context);
-                            },
-                            separatorBuilder: (context,index)=>SizedBox(height: 15,),
-                            itemCount: cubit.messages.length,
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
+              body: ConditionalBuilder(
+                condition:
+                    cubit.messages.length > 0 && cubit.messages.isNotEmpty,
+                builder:
+                    (context) => Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                if (cubit.messages[index].senderId ==
+                                    AppConstants.uId)
+                                  return buildMyMessage(
+                                    cubit.messages[index],
+                                    context,
+                                  );
+                                return buildMessage(
+                                  cubit.messages[index],
+                                  context,
+                                );
+                              },
+                              separatorBuilder:
+                                  (context, index) => SizedBox(height: 15),
+                              itemCount: cubit.messages.length,
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 15,),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey[300]!, width: 1),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: messageController,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Write a message...",
-                                  ),
-                                  onChanged: (value) {
-                                    (context as Element).markNeedsBuild();
-                                  },
-                                ),
+                          SizedBox(height: 15),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey[300]!,
+                                width: 1,
                               ),
-                              if (messageController.text.isNotEmpty)
-                                IconButton(
-                                  onPressed: () {
-                                    cubit.sendMessage(
-                                      receiverId: user.uId.toString(),
-                                      text: messageController.text,
-                                    );
-                                    messageController.clear();
-                                  },
-                                  icon: Icon(IconBroken.Send),
-                                ),
-                              if (messageController.text.isEmpty)
-                                Icon(IconBroken.Send, color: Colors.grey),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  fallback: (context)=>Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        Expanded(child: Center(child: Text(" No messages yet \n Start a conversation"))),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey[300]!, width: 1),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: messageController,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Write a message...",
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: messageController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Write a message...",
+                                    ),
+                                    onChanged: (value) {
+                                      (context as Element).markNeedsBuild();
+                                    },
                                   ),
-                                  onChanged: (value) {
-                                    (context as Element).markNeedsBuild();
-                                  },
                                 ),
-                              ),
-                              if (messageController.text.isNotEmpty)
-                                IconButton(
-                                  onPressed: () {
-                                    cubit.sendMessage(
-                                      receiverId: user.uId.toString(),
-                                      text: messageController.text,
-                                    );
-                                    messageController.clear();
-                                  },
-                                  icon: Icon(IconBroken.Send),
-                                ),
-                              if (messageController.text.isEmpty)
-                                Icon(IconBroken.Send, color: Colors.grey),
-                            ],
+                                if (messageController.text.isNotEmpty)
+                                  IconButton(
+                                    onPressed: () {
+                                      cubit.sendMessage(
+                                        receiverId: user.uId.toString(),
+                                        text: messageController.text,
+                                      );
+                                      messageController.clear();
+                                    },
+                                    icon: Icon(IconBroken.Send),
+                                  ),
+                                if (messageController.text.isEmpty)
+                                  Icon(IconBroken.Send, color: Colors.grey),
+                              ],
+                            ),
                           ),
-                        ),
-
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+                fallback:
+                    (context) => Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                " No messages yet \n Start a conversation",
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey[300]!,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: messageController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Write a message...",
+                                    ),
+                                    onChanged: (value) {
+                                      (context as Element).markNeedsBuild();
+                                    },
+                                  ),
+                                ),
+                                if (messageController.text.isNotEmpty)
+                                  IconButton(
+                                    onPressed: () {
+                                      cubit.sendMessage(
+                                        receiverId: user.uId.toString(),
+                                        text: messageController.text,
+                                      );
+                                      messageController.clear();
+                                    },
+                                    icon: Icon(IconBroken.Send),
+                                  ),
+                                if (messageController.text.isEmpty)
+                                  Icon(IconBroken.Send, color: Colors.grey),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
               ),
             );
           },
         );
-      }
+      },
     );
   }
-  Widget buildMessage(ChatModel chatModel,BuildContext context)=>Align(
+
+  Widget buildMessage(ChatModel chatModel, BuildContext context) => Align(
     alignment: AlignmentDirectional.centerStart,
     child: Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -174,17 +197,23 @@ class ChatDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
 
         children: [
-          Text("${chatModel.text}",style:TextStyle(fontSize: 14),),
-          SizedBox(height: 5,),
-          Text("${chatModel.dateTime?.toDate().toString()}",style: Theme.of(
-            context,
-          ).textTheme.labelSmall?.copyWith(fontSize: 5),
+          Text(
+            "${chatModel.text}",
+            style: TextStyle(fontSize: 14, color: Colors.black),
+          ),
+          SizedBox(height: 5),
+          Text(
+            "${chatModel.dateTime?.toDate().toString()}",
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(fontSize: 5, color: Colors.grey),
           ),
         ],
       ),
     ),
   );
-  Widget buildMyMessage(ChatModel chatModel,BuildContext context)=>Align(
+
+  Widget buildMyMessage(ChatModel chatModel, BuildContext context) => Align(
     alignment: AlignmentDirectional.centerEnd,
     child: Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -199,15 +228,16 @@ class ChatDetailsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("${chatModel.text}",style:TextStyle(fontSize: 14),),
-          SizedBox(height: 5,),
-          Text("${chatModel.dateTime?.toDate().toString()}",style: Theme.of(
-            context,
-          ).textTheme.labelSmall?.copyWith(fontSize: 6),
+          Text("${chatModel.text}", style: TextStyle(fontSize: 14)),
+          SizedBox(height: 5),
+          Text(
+            "${chatModel.dateTime?.toDate().toString()}",
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(fontSize: 6, color: Colors.grey),
           ),
         ],
       ),
     ),
   );
-
 }

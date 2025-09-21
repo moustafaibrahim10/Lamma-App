@@ -449,4 +449,9 @@ class SocialCubit extends Cubit<SocialStates> {
           emit(SearchErrorState());
         });
   }
+  bool isDark = false;
+  void changeAppMode(){
+    isDark = !isDark;
+    emit(ChangeAppModeState());
+  }
 }

@@ -27,7 +27,7 @@ class SearchScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(IconBroken.Arrow___Left_2),
+              icon: Icon(IconBroken.Arrow___Left_2,color: Colors.grey,),
             ),
             title: defaultTextFormField(
               controller: searchController,
@@ -85,7 +85,7 @@ class SearchScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                    separatorBuilder: (context, index) => myDivider(),
+                    separatorBuilder: (context, index) => SizedBox(height: 20.0,),
                     itemCount: cubit.userSearch.length,
                   ),
                 ),
@@ -93,7 +93,8 @@ class SearchScreen extends StatelessWidget {
                 (context) =>
                     state is SearchLoadingState
                         ? Center(child: CircularProgressIndicator())
-                        : Center(
+                        :
+                    Center(
                           child: Container(child: Text("Enter a name to want to search for! ")),
                         ),
           ),

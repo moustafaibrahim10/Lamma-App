@@ -29,18 +29,18 @@ class SocialLayout extends StatelessWidget {
         print(FirebaseAuth.instance.currentUser!.emailVerified);
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Text(
               cubit.titles[cubit.currentIndex],
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             actions: [
               IconButton(onPressed: () {
-              }, icon: Icon(IconBroken.Notification)),
+              }, icon: Icon(IconBroken.Notification,color: Colors.blue,)),
               IconButton(onPressed: () {
                 navigateTo(context, SearchScreen());
 
-              }, icon: Icon(IconBroken.Search)),
+              }, icon: Icon(IconBroken.Search,color: Colors.blue)),
             ],
           ),
           body: cubit.screens[cubit.currentIndex],
@@ -54,7 +54,7 @@ class SocialLayout extends StatelessWidget {
           elevation: 4.0,
             activeColor: Colors.blue,
             initialActiveIndex: cubit.currentIndex,
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             items: [
               TabItem(
                 icon: Icon(IconBroken.Home,),

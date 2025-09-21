@@ -130,3 +130,6 @@ class UpdateUserLocationErrorState extends SocialStates{
 class SearchLoadingState extends SocialStates{}
 class SearchSuccessState extends SocialStates{}
 class SearchErrorState extends SocialStates{}
+
+//change app mode
+class ChangeAppModeState extends SocialStates{}
