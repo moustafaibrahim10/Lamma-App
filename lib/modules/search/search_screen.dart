@@ -5,6 +5,7 @@ import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/states.dart';
+import 'package:social_app/modules/search/profile_search_screen.dart';
 import 'package:social_app/styles/icon_broken.dart';
 
 import '../../core/shared/components/components.dart';
@@ -52,7 +53,14 @@ class SearchScreen extends StatelessWidget {
                   child: ListView.separated(
                     itemBuilder:
                         (context, index) => InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            navigateTo(
+                              context,
+                              ProfileSearchScreen(
+                                profileModel: cubit.userSearch[index],
+                              ),
+                            );
+                          },
                           child: Row(
                             children: [
                               CircleAvatar(
