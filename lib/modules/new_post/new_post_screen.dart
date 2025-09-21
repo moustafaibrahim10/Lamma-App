@@ -53,7 +53,7 @@ class NewPostScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 20,
                       backgroundImage: NetworkImage(
-                        "https://i.pinimg.com/736x/82/0e/ea/820eea066798dd89e782dae4076b5684.jpg",
+                        userModel!.image.toString() ?? "https://i.pinimg.com/736x/82/0e/ea/820eea066798dd89e782dae4076b5684.jpg",
                       ),
                     ),
                     SizedBox(width: 15),
@@ -64,7 +64,7 @@ class NewPostScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                "Moustafa Ibrahim",
+                                userModel!.name.toString(),
                                 style: TextStyle(height: 0.7),
                               ),
                               SizedBox(width: 5),
