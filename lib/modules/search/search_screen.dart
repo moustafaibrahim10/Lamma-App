@@ -54,6 +54,7 @@ class SearchScreen extends StatelessWidget {
                     itemBuilder:
                         (context, index) => InkWell(
                           onTap: () {
+                            cubit.getTargetUserPosts(targetUid: cubit.userSearch[index].uId.toString());
                             navigateTo(
                               context,
                               ProfileSearchScreen(

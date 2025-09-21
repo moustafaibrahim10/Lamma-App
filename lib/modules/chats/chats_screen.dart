@@ -25,7 +25,10 @@ class ChatsScreen extends StatelessWidget {
                 itemBuilder:
                     (context, index) =>
                         buildChatItem(context, cubit.users[index]),
-                separatorBuilder: (context, index) => myDivider(),
+                separatorBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: myDivider(),
+                ),
                 itemCount: cubit.users.length,
               ),
           fallback: (context) => Center(child: CircularProgressIndicator()),

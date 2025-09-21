@@ -28,6 +28,7 @@ class NewPostScreen extends StatelessWidget {
         SocialCubit cubit = SocialCubit.get(context);
         return Scaffold(
           appBar: defaultAppBar(
+
             context: context,
             title: "Create Post",
             actions: [
@@ -38,6 +39,8 @@ class NewPostScreen extends StatelessWidget {
                     text: newPostController.text,
                     dateTime: DateTime.now().toString()
                   );
+                  cubit.getPosts();
+                  cubit.chaneBottomNavIndex(0);
                 }),
               ),
             ],

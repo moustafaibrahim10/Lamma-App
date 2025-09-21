@@ -174,6 +174,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
     UserModel model = userModel!.copyWith(
       name: name,
+      nameLower: name.toLowerCase(),
       bio: bio,
       phone: phone,
       email: email,
@@ -244,6 +245,7 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   List<PostModel> posts = [];
+  List<PostModel> myPosts = [];
   List<String> postsIds = [];
   List<int> likes = [];
   List<bool> isLiked = [];
@@ -251,6 +253,7 @@ class SocialCubit extends Cubit<SocialStates> {
   void getPosts() {
     emit(GetPostsLoadingState());
     posts.clear();
+    myPosts.clear();
     postsIds.clear();
     likes.clear();
     isLiked.clear();
@@ -267,6 +270,8 @@ class SocialCubit extends Cubit<SocialStates> {
                   postsIds.add(element.id);
                   likes.add(value.docs.length);
                   posts.add(PostModel.fromJson(element.data()));
+                  if(element.data()['uId'] == userModel?.uId)
+                  myPosts.add(PostModel.fromJson(element.data()));
                   getComments(element.id);
                   final postLikes = value.docs.map((e) => e.id);
                   isLiked.add(postLikes.contains(userModel?.uId));
@@ -277,6 +282,24 @@ class SocialCubit extends Cubit<SocialStates> {
         .catchError((error) {
           emit(GetUserErrorState(error));
         });
+  }
+  List<PostModel> targetUserPosts = [];
+
+
+  void getTargetUserPosts({required String targetUid}){
+    emit(GetTargetPostsLoadingState());
+    FirebaseFirestore.instance
+    .collection('posts')
+    .where('uId',isEqualTo:targetUid ).get().then((value){
+      targetUserPosts.clear();
+      value.docs.forEach((element){
+        targetUserPosts.add(PostModel.fromJson(element.data()));
+        emit(GetTargetPostsSuccessState());
+      });
+    }).catchError((error){
+      emit(GetTargetPostsErrorState(error));
+    });
+
   }
 
   void likePost(String postId, index) {
@@ -433,10 +456,11 @@ class SocialCubit extends Cubit<SocialStates> {
   Future<void> searchUser(String name) async {
     userSearch.clear();
     emit(SearchLoadingState());
+    String searchName = name.toLowerCase();
     final snapShot = await FirebaseFirestore.instance
         .collection('users')
-        .where('name', isGreaterThanOrEqualTo: name)
-        .where('name', isLessThanOrEqualTo: name + '\uf8ff')
+        .where('nameLower', isGreaterThanOrEqualTo: searchName)
+        .where('nameLower', isLessThanOrEqualTo: searchName + '\uf8ff')
         .get()
         .then((value) {
           value.docs.forEach((element) {

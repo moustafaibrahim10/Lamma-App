@@ -377,7 +377,8 @@ class HomeScreen extends StatelessWidget {
 
   Future showCommentsBottomSheet(BuildContext context,
       SocialCubit cubit,
-      postIndex,) {
+      postIndex,)
+  {
     cubit.getComments(cubit.postsIds[postIndex]);
     return showModalBottomSheet(
       isScrollControlled: true,
