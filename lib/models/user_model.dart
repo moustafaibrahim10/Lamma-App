@@ -1,22 +1,18 @@
-
 class FollowModel {
   String? name;
   String? image;
   String? uId;
   bool? isFollowing;
 
-  FollowModel({
-    this.name,
-    this.image,
-    this.uId,
-    this.isFollowing,
-  });
+  FollowModel({this.name, this.image, this.uId, this.isFollowing});
+
   FollowModel.fromJson(Map<String, dynamic> json) {
     name = json["name"];
     image = json["image"];
     uId = json["uId"];
     isFollowing = json["isFollowing"];
   }
+
   Map<String, dynamic> toMap() {
     return {
       "name": name,
@@ -29,7 +25,7 @@ class FollowModel {
 
 class UserModel {
   String? name;
-  String?nameLower;
+  String? nameLower;
   String? email;
   String? phone;
   String? password;
@@ -38,7 +34,7 @@ class UserModel {
   String? cover;
   String? bio;
   bool? isEmailVerified;
-  double?lat;
+  double? lat;
   double? long;
   List<FollowModel>? followers;
   List<FollowModel>? following;
@@ -60,7 +56,7 @@ class UserModel {
     this.following,
   });
 
-  UserModel copyWith ({
+  UserModel copyWith({
     final String? name,
     final String? nameLower,
     final String? email,
@@ -75,7 +71,7 @@ class UserModel {
     final double? long,
     final List<FollowModel>? followers,
     final List<FollowModel>? following,
-}){
+  }) {
     return UserModel(
       name: name ?? this.name,
       nameLower: nameLower ?? this.nameLower,
@@ -87,12 +83,12 @@ class UserModel {
       cover: cover ?? this.cover,
       bio: bio ?? this.bio,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
-      lat: lat ?? this.lat ,
-      long: long??this.long,
+      lat: lat ?? this.lat,
+      long: long ?? this.long,
       followers: followers ?? this.followers,
       following: following ?? this.following,
     );
-}
+  }
 
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json["name"];
@@ -103,18 +99,22 @@ class UserModel {
     uId = json["uId"];
     isEmailVerified = json["isEmailVerified"];
     image = json["image"];
-    bio=json["bio"];
-    cover=json["cover"];
+    bio = json["bio"];
+    cover = json["cover"];
     lat = json["lat"];
     long = json["long"];
-    followers = json["followers"] != null ?
-        List<FollowModel>.from(
-          json["followers"].map((e)=>FollowModel.fromJson(e))
-        ): null ;
-    following= json["following"]!=null ?
-        List<FollowModel>.from(
-          json["following"].map((e)=> FollowModel.fromJson(e))
-        ): null;
+    followers =
+        json["followers"] != null
+            ? List<FollowModel>.from(
+              json["followers"].map((e) => FollowModel.fromJson(e)),
+            )
+            : null;
+    following =
+        json["following"] != null
+            ? List<FollowModel>.from(
+              json["following"].map((e) => FollowModel.fromJson(e)),
+            )
+            : null;
   }
 
   Map<String, dynamic> toMap() {
@@ -123,17 +123,16 @@ class UserModel {
       "nameLower": name?.toLowerCase(),
       "email": email,
       "phone": phone,
-      "uId":uId,
+      "uId": uId,
       "password": password,
       "isEmailVerified": isEmailVerified,
       "image": image,
-      "bio":bio,
-      "cover":cover,
+      "bio": bio,
+      "cover": cover,
       "lat": lat,
-      "long":long,
+      "long": long,
       "followers": followers?.map((e) => e.toMap()).toList(),
-      "following" : following?.map((e)=>e.toMap()).toList(),
+      "following": following?.map((e) => e.toMap()).toList(),
     };
   }
 }
-
