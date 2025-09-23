@@ -1,3 +1,32 @@
+
+class FollowModel {
+  String? name;
+  String? image;
+  String? uId;
+  bool? isFollowing;
+
+  FollowModel({
+    this.name,
+    this.image,
+    this.uId,
+    this.isFollowing,
+  });
+  FollowModel.fromJson(Map<String, dynamic> json) {
+    name = json["name"];
+    image = json["image"];
+    uId = json["uId"];
+    isFollowing = json["isFollowing"];
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "image": image,
+      "uId": uId,
+      "isFollowing": isFollowing,
+    };
+  }
+}
+
 class UserModel {
   String? name;
   String?nameLower;
@@ -11,6 +40,8 @@ class UserModel {
   bool? isEmailVerified;
   double?lat;
   double? long;
+  List<FollowModel>? followers;
+  List<FollowModel>? following;
 
   UserModel({
     this.name,
@@ -25,6 +56,8 @@ class UserModel {
     this.cover,
     this.lat,
     this.long,
+    this.followers,
+    this.following,
   });
 
   UserModel copyWith ({
@@ -40,6 +73,8 @@ class UserModel {
     final bool? isEmailVerified,
     final double? lat,
     final double? long,
+    final List<FollowModel>? followers,
+    final List<FollowModel>? following,
 }){
     return UserModel(
       name: name ?? this.name,
@@ -54,6 +89,8 @@ class UserModel {
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
       lat: lat ?? this.lat ,
       long: long??this.long,
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
     );
 }
 
@@ -70,6 +107,14 @@ class UserModel {
     cover=json["cover"];
     lat = json["lat"];
     long = json["long"];
+    followers = json["followers"] != null ?
+        List<FollowModel>.from(
+          json["followers"].map((e)=>FollowModel.fromJson(e))
+        ): null ;
+    following= json["following"]!=null ?
+        List<FollowModel>.from(
+          json["following"].map((e)=> FollowModel.fromJson(e))
+        ): null;
   }
 
   Map<String, dynamic> toMap() {
@@ -86,6 +131,9 @@ class UserModel {
       "cover":cover,
       "lat": lat,
       "long":long,
+      "followers": followers?.map((e) => e.toMap()).toList(),
+      "following" : following?.map((e)=>e.toMap()).toList(),
     };
   }
 }
+
