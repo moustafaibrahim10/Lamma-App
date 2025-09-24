@@ -101,16 +101,17 @@ class ProfileScreen extends StatelessWidget {
                           onTap: () {},
                         ),
                       ),
+
                       Expanded(
                         child: InkWell(
                           child: Column(
                             children: [
                               Text(
-                                cubit.myPosts.length.toString(),
+                                userModel?.followers?.length.toString() ?? "0",
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(
-                                "Photos",
+                                "Followers",
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
                             ],
@@ -123,24 +124,7 @@ class ProfileScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                "10K",
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                              Text(
-                                "Following",
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
-                            ],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          child: Column(
-                            children: [
-                              Text(
-                                "69",
+                                userModel?.following?.length.toString() ?? "0",
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(

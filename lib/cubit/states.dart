@@ -66,6 +66,7 @@ class GetPostsErrorState extends SocialStates {
 
   GetPostsErrorState(this.error);
 }
+
 class GetTargetPostsLoadingState extends SocialStates {}
 
 class GetTargetPostsSuccessState extends SocialStates {}
@@ -94,7 +95,9 @@ class PostCommentErrorState extends SocialStates {
 }
 
 class GetPostCommentLoadingState extends SocialStates {}
+
 class GetPostCommentSuccessState extends SocialStates {}
+
 class GetPostCommentErrorState extends SocialStates {
   final String error;
 
@@ -111,16 +114,22 @@ class GetAllUsersErrorState extends SocialStates {
 
   GetAllUsersErrorState(this.error);
 }
+
 //Send Message
 class SendMessageSuccessState extends SocialStates {}
+
 class SendMessageErrorState extends SocialStates {
   final String error;
+
   SendMessageErrorState(this.error);
 }
+
 //Receive Message
 class ReceiveMessageSuccessState extends SocialStates {}
+
 class ReceiveMessageErrorState extends SocialStates {
   final String error;
+
   ReceiveMessageErrorState(this.error);
 }
 
@@ -128,17 +137,27 @@ class ReceiveMessageErrorState extends SocialStates {
 class GetMessageSuccessState extends SocialStates {}
 
 //Location
-class UpdateUserLocationSuccessState extends SocialStates{}
-class UpdateUserLocationErrorState extends SocialStates{
+class UpdateUserLocationSuccessState extends SocialStates {}
+
+class UpdateUserLocationErrorState extends SocialStates {
   final String error;
 
   UpdateUserLocationErrorState(this.error);
 }
 
 //search
-class SearchLoadingState extends SocialStates{}
-class SearchSuccessState extends SocialStates{}
-class SearchErrorState extends SocialStates{}
+class SearchLoadingState extends SocialStates {}
+
+class SearchSuccessState extends SocialStates {}
+
+class SearchErrorState extends SocialStates {}
 
 //change app mode
-class ChangeAppModeState extends SocialStates{}
+class ChangeAppModeState extends SocialStates {}
+
+//follow
+class FollowUserLoadingState extends SocialStates {}
+class FollowUserSuccessState extends SocialStates {}
+class FollowUserErrorState extends SocialStates {
+  FollowUserErrorState(String string);
+}

@@ -478,4 +478,38 @@ class SocialCubit extends Cubit<SocialStates> {
     isDark = !isDark;
     emit(ChangeAppModeState());
   }
+
+  bool isFollow = false;
+  void followUser({required UserModel targetUser}) async{
+    emit(FollowUserLoadingState());
+    try{
+      FollowModel newFollowing = FollowModel(
+        uId: targetUser.uId,
+        name: targetUser.name,
+        image: targetUser.image,
+        isFollowing: true,
+      );
+      List<FollowModel> updatedFollowingList = userModel?.following ??[];
+      updatedFollowingList.add(newFollowing);
+      await FirebaseFirestore.instance
+      .collection('users').doc(userModel?.uId).update(
+          {'following': updatedFollowingList.map((e) => e.toMap()).toList()});
+
+      FollowModel newFollower = FollowModel(
+        uId: userModel?.uId,
+        name: userModel?.name,
+        image: userModel?.image,
+        isFollowing: true,
+      );
+      FirebaseFirestore.instance.collection('users').doc(targetUser.uId).update({
+        "followers": FieldValue.arrayUnion([newFollower.toMap()])
+      });
+      emit(FollowUserSuccessState());
+
+    }catch(error){
+      print("Error following user: $error");
+      emit(FollowUserErrorState(error.toString()));
+
+    }
+  }
 }
