@@ -160,7 +160,7 @@ class ProfileSearchScreen extends StatelessWidget {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () {
-                            cubit.followUser(profileModel.uId.toString());
+                            cubit.followUser(targetUser: profileModel);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
