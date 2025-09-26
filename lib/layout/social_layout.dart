@@ -21,7 +21,7 @@ class SocialLayout extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {
         if (state is NewPostState) {
-         navigateTo(context, NewPostScreen());
+          navigateTo(context, NewPostScreen());
         }
       },
       builder: (context, state) {
@@ -35,12 +35,16 @@ class SocialLayout extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             actions: [
-              IconButton(onPressed: () {
-              }, icon: Icon(IconBroken.Notification,color: Colors.blue,)),
-              IconButton(onPressed: () {
-                navigateTo(context, SearchScreen());
-
-              }, icon: Icon(IconBroken.Search,color: Colors.blue)),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(IconBroken.Notification, color: Colors.blue),
+              ),
+              IconButton(
+                onPressed: () {
+                  navigateTo(context, SearchScreen());
+                },
+                icon: Icon(IconBroken.Search, color: Colors.blue),
+              ),
             ],
           ),
           body: cubit.screens[cubit.currentIndex],
@@ -51,31 +55,16 @@ class SocialLayout extends StatelessWidget {
               cubit.chaneBottomNavIndex(index);
             },
             color: Colors.grey,
-          elevation: 4.0,
+            elevation: 4.0,
             activeColor: Colors.blue,
             initialActiveIndex: cubit.currentIndex,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             items: [
-              TabItem(
-                icon: Icon(IconBroken.Home,),
-                title: "Home",
-              ),
-              TabItem(
-                icon: Icon(IconBroken.Chat,),
-                title: "Chat",
-              ),
-              TabItem(
-                icon: Icon(IconBroken.Paper_Upload),
-                title: "Post",
-              ),
-              TabItem(
-                icon: Icon(IconBroken.Location,),
-                title: "Users",
-              ),
-              TabItem(
-                icon: Icon(IconBroken.Profile),
-                title: "Profile",
-              ),
+              TabItem(icon: Icon(IconBroken.Home), title: "Home"),
+              TabItem(icon: Icon(IconBroken.Chat), title: "Chat"),
+              TabItem(icon: Icon(IconBroken.Paper_Upload), title: "Post"),
+              TabItem(icon: Icon(IconBroken.Location), title: "Users"),
+              TabItem(icon: Icon(IconBroken.Profile), title: "Profile"),
             ],
           ),
         );

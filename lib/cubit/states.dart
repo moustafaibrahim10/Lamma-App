@@ -157,7 +157,9 @@ class ChangeAppModeState extends SocialStates {}
 
 //follow
 class FollowUserLoadingState extends SocialStates {}
+
 class FollowUserSuccessState extends SocialStates {}
+
 class FollowUserErrorState extends SocialStates {
   FollowUserErrorState(String string);
 }
