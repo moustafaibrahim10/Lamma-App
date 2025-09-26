@@ -64,7 +64,10 @@ ThemeData lightTheme = ThemeData(
 );
 ThemeData darkTheme = ThemeData(
   //HexColor('333739')
-  appBarTheme: AppBarTheme(color: Color(0XFF333739), scrolledUnderElevation: 0.0),
+  appBarTheme: AppBarTheme(
+    color: Color(0XFF333739),
+    scrolledUnderElevation: 0.0,
+  ),
   scaffoldBackgroundColor: Color(0XFF333739),
   primaryColor: AppConstants.primaryColor,
   iconTheme: IconThemeData(color: AppConstants.primaryColor),
@@ -116,7 +119,7 @@ ThemeData darkTheme = ThemeData(
   ),
 
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor:Color(0XFF333739),
+    backgroundColor: Color(0XFF333739),
     type: BottomNavigationBarType.fixed,
     selectedItemColor: AppConstants.primaryColor,
 

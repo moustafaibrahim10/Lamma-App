@@ -165,7 +165,9 @@ class ProfileSearchScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                             cubit.isFollow? Text("Following"):Text("Follow"),
+                              cubit.isFollow
+                                  ? Text("Following")
+                                  : Text("Follow"),
                               SizedBox(width: 10),
                               Icon(IconBroken.Add_User),
                             ],

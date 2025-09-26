@@ -62,9 +62,7 @@ class ProfileScreen extends StatelessWidget {
                             Theme.of(context).scaffoldBackgroundColor,
                         child: CircleAvatar(
                           radius: 55,
-                          backgroundImage: NetworkImage(
-                            '${userModel?.image}',
-                          ),
+                          backgroundImage: NetworkImage('${userModel?.image}'),
                         ),
                       ),
                     ],
@@ -149,10 +147,14 @@ class ProfileScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                          Text("Edit Profile", style: TextStyle(fontSize: 14),),
-                          SizedBox(width: 10.0),
-                          Icon(IconBroken.Edit, size: 14),
-                        ],),
+                            Text(
+                              "Edit Profile",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            SizedBox(width: 10.0),
+                            Icon(IconBroken.Edit, size: 14),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(width: 10.0),
@@ -160,15 +162,14 @@ class ProfileScreen extends StatelessWidget {
                       onPressed: () {
                         cubit.changeAppMode();
                       },
-                      child: Icon(Icons.brightness_4_outlined, size: 14 ),
+                      child: Icon(Icons.brightness_4_outlined, size: 14),
                     ),
                     SizedBox(width: 10.0),
                     OutlinedButton(
                       onPressed: () {
-
-                      pushAndFinish(context: context, screen: LoginScreen());
-                        CacheHelper.removeData(key: "uId").then((value){
-                          if(value){
+                        pushAndFinish(context: context, screen: LoginScreen());
+                        CacheHelper.removeData(key: "uId").then((value) {
+                          if (value) {
                             showToast(
                               msg: "Logout done successfully",
                               state: ToastState.success,
@@ -187,15 +188,13 @@ class ProfileScreen extends StatelessWidget {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder:
-                      (context, index) =>
-                      buildPostItem(
+                      (context, index) => buildPostItem(
                         cubit.myPosts[index],
                         context,
                         cubit,
                         index,
                       ),
-                  separatorBuilder:
-                      (context, index) => SizedBox(height: 8.0),
+                  separatorBuilder: (context, index) => SizedBox(height: 8.0),
                   itemCount: cubit.myPosts.length,
                 ),
               ],
@@ -205,319 +204,287 @@ class ProfileScreen extends StatelessWidget {
       },
     );
   }
-  Widget buildPostItem(PostModel model,
-      context,
-      SocialCubit cubit,
-      index,) =>
-      Card(
-        color: Theme
-            .of(context)
-            .scaffoldBackgroundColor,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        elevation: 5,
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+  Widget buildPostItem(
+    PostModel model,
+    context,
+    SocialCubit cubit,
+    index,
+  ) => Card(
+    color: Theme.of(context).scaffoldBackgroundColor,
+    clipBehavior: Clip.antiAliasWithSaveLayer,
+    elevation: 5,
+    margin: EdgeInsets.symmetric(horizontal: 8.0),
+    child: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage("${model.image}"),
-                  ),
-                  SizedBox(width: 15),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage("${model.image}"),
+              ),
+              SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                                "${model.name}", style: TextStyle(height: 0.7)),
-                            SizedBox(width: 5),
-                            Icon(Icons.check_circle, color: Colors.blue,
-                                size: 15),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "${model.dateTime}",
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .labelSmall,
-                        ),
+                        Text("${model.name}", style: TextStyle(height: 0.7)),
+                        SizedBox(width: 5),
+                        Icon(Icons.check_circle, color: Colors.blue, size: 15),
                       ],
                     ),
-                  ),
-                  SizedBox(width: 15),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.more_horiz, size: 17),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: myDivider(),
-              ),
-              Text("${model.text}", style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyMedium),
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 5.0),
-              //   child: Container(
-              //     width: double.infinity,
-              //     child: Wrap(
-              //       crossAxisAlignment: WrapCrossAlignment.start,
-              //       children: [
-              //         Container(
-              //           padding: const EdgeInsets.only(right: 5.0),
-              //           height: 20,
-              //           child: MaterialButton(
-              //             padding: EdgeInsets.zero,
-              //             minWidth: 1.0,
-              //             onPressed: () {},
-              //             child: Text(
-              //               "#bookTest",
-              //               style: Theme.of(
-              //                 context,
-              //               ).textTheme.titleSmall?.copyWith(color: Colors.blue),
-              //             ),
-              //           ),
-              //         ),
-              //         Container(
-              //           padding: const EdgeInsets.only(right: 5.0),
-              //           height: 20,
-              //           child: MaterialButton(
-              //             padding: EdgeInsets.zero,
-              //             minWidth: 1.0,
-              //             onPressed: () {},
-              //             child: Text(
-              //               "#development",
-              //               style: Theme.of(
-              //                 context,
-              //               ).textTheme.titleSmall?.copyWith(color: Colors.blue),
-              //             ),
-              //           ),
-              //         ),
-              //         Container(
-              //           padding: const EdgeInsets.only(right: 5.0),
-              //           height: 20,
-              //           child: MaterialButton(
-              //             padding: EdgeInsets.zero,
-              //             minWidth: 1.0,
-              //             onPressed: () {},
-              //             child: Text(
-              //               "#software",
-              //               style: Theme.of(
-              //                 context,
-              //               ).textTheme.titleSmall?.copyWith(color: Colors.blue),
-              //             ),
-              //           ),
-              //         ),
-              //         Container(
-              //           padding: const EdgeInsets.only(right: 5.0),
-              //           height: 20,
-              //           child: MaterialButton(
-              //             padding: EdgeInsets.zero,
-              //             minWidth: 1.0,
-              //             onPressed: () {},
-              //             child: Text(
-              //               "#MoustafaIbrahimYoussef",
-              //               style: Theme.of(
-              //                 context,
-              //               ).textTheme.titleSmall?.copyWith(color: Colors.blue),
-              //             ),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              if (model.postImage != '' && model.postImage != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: Container(
-                    height: 160,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage("${model.postImage}"),
-                      ),
-                    ),
-                  ),
-                ),
-              Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          children: [
-                            Icon(IconBroken.Heart, size: 18, color: Colors.red),
-                            SizedBox(width: 5),
-                            Text(
-                              "${cubit.likes[index]}",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .labelSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () {},
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      child: InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Icon(IconBroken.Chat, size: 18, color: Colors
-                                  .amber),
-                              SizedBox(width: 5),
-                              Text(
-                                "${cubit.comments[cubit.postsIds[index]]
-                                    ?.length}",
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .labelSmall,
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          showCommentsBottomSheet(context, cubit, index);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              myDivider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          showCommentsBottomSheet(context, cubit, index);
-                        },
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 17,
-                              backgroundImage: NetworkImage("${userModel!
-                                  .image}"),
-                            ),
-                            SizedBox(width: 12),
-                            Text(
-                              "Write a comment ...",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .labelSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            cubit.isLiked[index]
-                                ? Icon(
-                              IconBroken.Heart,
-                              size: 18,
-                              color: Colors.red,
-                            )
-                                : Icon(
-                              IconBroken.Heart,
-                              size: 18,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Like",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .labelSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        cubit.likePost(cubit.postsIds[index], index);
-                      },
-                    ),
-                    SizedBox(width: 20),
-                    InkWell(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Icon(IconBroken.Upload, size: 18,
-                                color: Colors.green),
-                            SizedBox(width: 5),
-                            Text(
-                              "Share",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .labelSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () {},
+                    SizedBox(height: 5),
+                    Text(
+                      "${model.dateTime}",
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ],
                 ),
               ),
+              SizedBox(width: 15),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.more_horiz, size: 17),
+              ),
             ],
           ),
-        ),
-      );
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: myDivider(),
+          ),
+          Text("${model.text}", style: Theme.of(context).textTheme.bodyMedium),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 5.0),
+          //   child: Container(
+          //     width: double.infinity,
+          //     child: Wrap(
+          //       crossAxisAlignment: WrapCrossAlignment.start,
+          //       children: [
+          //         Container(
+          //           padding: const EdgeInsets.only(right: 5.0),
+          //           height: 20,
+          //           child: MaterialButton(
+          //             padding: EdgeInsets.zero,
+          //             minWidth: 1.0,
+          //             onPressed: () {},
+          //             child: Text(
+          //               "#bookTest",
+          //               style: Theme.of(
+          //                 context,
+          //               ).textTheme.titleSmall?.copyWith(color: Colors.blue),
+          //             ),
+          //           ),
+          //         ),
+          //         Container(
+          //           padding: const EdgeInsets.only(right: 5.0),
+          //           height: 20,
+          //           child: MaterialButton(
+          //             padding: EdgeInsets.zero,
+          //             minWidth: 1.0,
+          //             onPressed: () {},
+          //             child: Text(
+          //               "#development",
+          //               style: Theme.of(
+          //                 context,
+          //               ).textTheme.titleSmall?.copyWith(color: Colors.blue),
+          //             ),
+          //           ),
+          //         ),
+          //         Container(
+          //           padding: const EdgeInsets.only(right: 5.0),
+          //           height: 20,
+          //           child: MaterialButton(
+          //             padding: EdgeInsets.zero,
+          //             minWidth: 1.0,
+          //             onPressed: () {},
+          //             child: Text(
+          //               "#software",
+          //               style: Theme.of(
+          //                 context,
+          //               ).textTheme.titleSmall?.copyWith(color: Colors.blue),
+          //             ),
+          //           ),
+          //         ),
+          //         Container(
+          //           padding: const EdgeInsets.only(right: 5.0),
+          //           height: 20,
+          //           child: MaterialButton(
+          //             padding: EdgeInsets.zero,
+          //             minWidth: 1.0,
+          //             onPressed: () {},
+          //             child: Text(
+          //               "#MoustafaIbrahimYoussef",
+          //               style: Theme.of(
+          //                 context,
+          //               ).textTheme.titleSmall?.copyWith(color: Colors.blue),
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          if (model.postImage != '' && model.postImage != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Container(
+                height: 160,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage("${model.postImage}"),
+                  ),
+                ),
+              ),
+            ),
+          Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      children: [
+                        Icon(IconBroken.Heart, size: 18, color: Colors.red),
+                        SizedBox(width: 5),
+                        Text(
+                          "${cubit.likes[index]}",
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  child: InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(IconBroken.Chat, size: 18, color: Colors.amber),
+                          SizedBox(width: 5),
+                          Text(
+                            "${cubit.comments[cubit.postsIds[index]]?.length}",
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      showCommentsBottomSheet(context, cubit, index);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          myDivider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      showCommentsBottomSheet(context, cubit, index);
+                    },
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 17,
+                          backgroundImage: NetworkImage("${userModel!.image}"),
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          "Write a comment ...",
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        cubit.isLiked[index]
+                            ? Icon(
+                              IconBroken.Heart,
+                              size: 18,
+                              color: Colors.red,
+                            )
+                            : Icon(
+                              IconBroken.Heart,
+                              size: 18,
+                              color: Colors.grey,
+                            ),
+                        SizedBox(width: 5),
+                        Text(
+                          "Like",
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    cubit.likePost(cubit.postsIds[index], index);
+                  },
+                ),
+                SizedBox(width: 20),
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(IconBroken.Upload, size: 18, color: Colors.green),
+                        SizedBox(width: 5),
+                        Text(
+                          "Share",
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
-  Future showCommentsBottomSheet(BuildContext context,
-      SocialCubit cubit,
-      postIndex,)
-  {
+  Future showCommentsBottomSheet(
+    BuildContext context,
+    SocialCubit cubit,
+    postIndex,
+  ) {
     cubit.getComments(cubit.postsIds[postIndex]);
     return showModalBottomSheet(
       isScrollControlled: true,
-      backgroundColor: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       context: context,
       builder:
-          (context) =>
-          BlocBuilder<SocialCubit, SocialStates>(
+          (context) => BlocBuilder<SocialCubit, SocialStates>(
             builder: (context, state) {
               return Padding(
                 padding: EdgeInsets.only(
-                  bottom: MediaQuery
-                      .of(context)
-                      .viewInsets
-                      .bottom,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
                 ),
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
@@ -526,40 +493,39 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Container(
                         width: double.infinity,
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height * 0.6,
+                        height: MediaQuery.of(context).size.height * 0.6,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20),
                             topLeft: Radius.circular(20),
                           ),
-                          color: Theme
-                              .of(context)
-                              .scaffoldBackgroundColor,
+                          color: Theme.of(context).scaffoldBackgroundColor,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: ConditionalBuilder(
                             condition:
-                            cubit.comments[cubit.postsIds[postIndex]] !=
+                                cubit.comments[cubit.postsIds[postIndex]] !=
                                 null,
                             builder:
-                                (context) =>
-                                ListView.separated(
+                                (context) => ListView.separated(
                                   //shrinkWrap: true,
                                   //physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, commentIndex) {
                                     var postComments =
-                                    cubit.comments[cubit
-                                        .postsIds[postIndex]];
+                                        cubit.comments[cubit
+                                            .postsIds[postIndex]];
                                     var comment = postComments?[commentIndex];
                                     return Column(
                                       children: [
                                         Container(
                                           decoration: BoxDecoration(
-                                            color: cubit.isDark ? Colors.black.withOpacity(0.3) : Colors.grey[300],
+                                            color:
+                                                cubit.isDark
+                                                    ? Colors.black.withOpacity(
+                                                      0.3,
+                                                    )
+                                                    : Colors.grey[300],
                                             borderRadius: BorderRadius.circular(
                                               20,
                                             ),
@@ -577,44 +543,45 @@ class ProfileScreen extends StatelessWidget {
                                                 SizedBox(width: 12),
                                                 Column(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       children: [
                                                         Text(
                                                           "${comment?.name}",
                                                           style:
-                                                          Theme
-                                                              .of(context)
-                                                              .textTheme
-                                                              .bodyMedium,
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium,
                                                         ),
                                                         SizedBox(width: 5),
                                                         Text(
                                                           "${comment?.date}",
-                                                          style: Theme
-                                                              .of(
-                                                            context,
-                                                          )
+                                                          style: Theme.of(
+                                                                context,
+                                                              )
                                                               .textTheme
                                                               .labelSmall
                                                               ?.copyWith(
-                                                            fontSize: 7,
-                                                          ),
+                                                                fontSize: 7,
+                                                              ),
                                                         ),
                                                       ],
                                                     ),
                                                     SizedBox(height: 5),
                                                     Text(
                                                       "${comment?.comment}",
-                                                      style: Theme
-                                                          .of(context)
-                                                          .textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                        color:cubit.isDark ? Colors.white.withOpacity(0.8):
-                                                        Colors
-                                                            .grey[700],
+                                                      style: Theme.of(
+                                                        context,
+                                                      ).textTheme.bodyMedium?.copyWith(
+                                                        color:
+                                                            cubit.isDark
+                                                                ? Colors.white
+                                                                    .withOpacity(
+                                                                      0.8,
+                                                                    )
+                                                                : Colors
+                                                                    .grey[700],
                                                       ),
                                                     ),
                                                   ],
@@ -629,14 +596,13 @@ class ProfileScreen extends StatelessWidget {
                                   separatorBuilder:
                                       (context, index) => SizedBox(height: 10),
                                   itemCount:
-                                  cubit
-                                      .comments[cubit.postsIds[postIndex]]
-                                      ?.length ??
+                                      cubit
+                                          .comments[cubit.postsIds[postIndex]]
+                                          ?.length ??
                                       0,
                                 ),
                             fallback:
-                                (context) =>
-                                Center(
+                                (context) => Center(
                                   child: Text(
                                     "No Comments Yet!",
                                     style: TextStyle(
@@ -650,7 +616,10 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          color: cubit.isDark ? Colors.black.withOpacity(0.3): Colors.grey[300],
+                          color:
+                              cubit.isDark
+                                  ? Colors.black.withOpacity(0.3)
+                                  : Colors.grey[300],
 
                           //   borderRadius: BorderRadius.circular(20),
                         ),
@@ -671,7 +640,12 @@ class ProfileScreen extends StatelessWidget {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Write a comment ...",
-                                  hintStyle: TextStyle(color:cubit.isDark ? Colors.white : Colors.black ),
+                                  hintStyle: TextStyle(
+                                    color:
+                                        cubit.isDark
+                                            ? Colors.white
+                                            : Colors.black,
+                                  ),
                                 ),
                                 onChanged: (value) {
                                   (context as Element).markNeedsBuild();
