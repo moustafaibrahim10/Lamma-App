@@ -13,7 +13,7 @@ import '../../styles/icon_broken.dart';
 import '../chats/chat_details_screen.dart';
 
 class ProfileSearchScreen extends StatelessWidget {
-  final UserModel profileModel;
+   UserModel profileModel;
 
   ProfileSearchScreen({required this.profileModel});
 
@@ -22,9 +22,19 @@ class ProfileSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is FollowUserSuccessState)
+          {
+            showToast(msg: "Followed Successfully", state: ToastState.success);
+          }
+        if(state is UnfollowUserSuccessState){
+          showToast(msg: "Unfollowed Successfully", state: ToastState.success);
+
+        }
+      },
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
+        bool isFollow = userModel?.following?.any((f)=> f.uId == profileModel.uId) ?? false;
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -165,7 +175,7 @@ class ProfileSearchScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              cubit.isFollow
+                              isFollow
                                   ? Text("Following")
                                   : Text("Follow"),
                               SizedBox(width: 10),

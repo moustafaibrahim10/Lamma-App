@@ -1,3 +1,5 @@
+import 'package:social_app/models/user_model.dart';
+
 abstract class SocialStates {}
 
 class InitialState extends SocialStates {}
@@ -158,8 +160,13 @@ class ChangeAppModeState extends SocialStates {}
 //follow
 class FollowUserLoadingState extends SocialStates {}
 
-class FollowUserSuccessState extends SocialStates {}
-class UnfollowUserSuccessState extends SocialStates {}
+class FollowUserSuccessState extends SocialStates {
+
+
+}
+class UnfollowUserSuccessState extends SocialStates {
+
+}
 
 class FollowUserErrorState extends SocialStates {
   FollowUserErrorState(String string);
