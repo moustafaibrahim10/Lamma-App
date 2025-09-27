@@ -2,15 +2,13 @@ class FollowModel {
   String? name;
   String? image;
   String? uId;
-  bool? isFollowing;
 
-  FollowModel({this.name, this.image, this.uId, this.isFollowing});
+  FollowModel({this.name, this.image, this.uId});
 
   FollowModel.fromJson(Map<String, dynamic> json) {
     name = json["name"];
     image = json["image"];
     uId = json["uId"];
-    isFollowing = json["isFollowing"];
   }
 
   Map<String, dynamic> toMap() {
@@ -18,7 +16,6 @@ class FollowModel {
       "name": name,
       "image": image,
       "uId": uId,
-      "isFollowing": isFollowing,
     };
   }
 }

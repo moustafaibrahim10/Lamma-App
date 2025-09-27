@@ -270,8 +270,8 @@ class SocialCubit extends Cubit<SocialStates> {
                   postsIds.add(element.id);
                   likes.add(value.docs.length);
                   posts.add(PostModel.fromJson(element.data()));
-                  if(element.data()['uId'] == userModel?.uId)
-                  myPosts.add(PostModel.fromJson(element.data()));
+                  if (element.data()['uId'] == userModel?.uId)
+                    myPosts.add(PostModel.fromJson(element.data()));
                   getComments(element.id);
                   final postLikes = value.docs.map((e) => e.id);
                   isLiked.add(postLikes.contains(userModel?.uId));
@@ -283,23 +283,25 @@ class SocialCubit extends Cubit<SocialStates> {
           emit(GetUserErrorState(error));
         });
   }
+
   List<PostModel> targetUserPosts = [];
 
-
-  void getTargetUserPosts({required String targetUid}){
+  void getTargetUserPosts({required String targetUid}) {
     emit(GetTargetPostsLoadingState());
     FirebaseFirestore.instance
-    .collection('posts')
-    .where('uId',isEqualTo:targetUid ).get().then((value){
-      targetUserPosts.clear();
-      value.docs.forEach((element){
-        targetUserPosts.add(PostModel.fromJson(element.data()));
-        emit(GetTargetPostsSuccessState());
-      });
-    }).catchError((error){
-      emit(GetTargetPostsErrorState(error));
-    });
-
+        .collection('posts')
+        .where('uId', isEqualTo: targetUid)
+        .get()
+        .then((value) {
+          targetUserPosts.clear();
+          value.docs.forEach((element) {
+            targetUserPosts.add(PostModel.fromJson(element.data()));
+            emit(GetTargetPostsSuccessState());
+          });
+        })
+        .catchError((error) {
+          emit(GetTargetPostsErrorState(error));
+        });
   }
 
   void likePost(String postId, index) {
@@ -473,43 +475,75 @@ class SocialCubit extends Cubit<SocialStates> {
           emit(SearchErrorState());
         });
   }
+
   bool isDark = false;
-  void changeAppMode(){
+
+  void changeAppMode() {
     isDark = !isDark;
     emit(ChangeAppModeState());
   }
 
   bool isFollow = false;
-  void followUser({required UserModel targetUser}) async{
+
+  void followUser({required UserModel targetUser}) async {
     emit(FollowUserLoadingState());
-    try{
-      FollowModel newFollowing = FollowModel(
-        uId: targetUser.uId,
-        name: targetUser.name,
-        image: targetUser.image,
-        isFollowing: true,
-      );
-      List<FollowModel> updatedFollowingList = userModel?.following ??[];
-      updatedFollowingList.add(newFollowing);
-      await FirebaseFirestore.instance
-      .collection('users').doc(userModel?.uId).update(
-          {'following': updatedFollowingList.map((e) => e.toMap()).toList()});
 
-      FollowModel newFollower = FollowModel(
-        uId: userModel?.uId,
-        name: userModel?.name,
-        image: userModel?.image,
-        isFollowing: true,
-      );
-      FirebaseFirestore.instance.collection('users').doc(targetUser.uId).update({
-        "followers": FieldValue.arrayUnion([newFollower.toMap()])
-      });
-      emit(FollowUserSuccessState());
+    FollowModel newFollowing = FollowModel(
+      uId: targetUser.uId,
+      name: targetUser.name,
+      image: targetUser.image,
+    );
+    FollowModel newFollower = FollowModel(
+      uId: userModel?.uId,
+      name: userModel?.name,
+      image: userModel?.image,
+    );
+    bool isCurrentlyFollowing =
+        userModel?.following?.any((f) => f.uId == targetUser.uId) ?? false;
 
-    }catch(error){
+    try {
+      //unFollow user
+      if (isCurrentlyFollowing) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userModel?.uId)
+            .update({
+              'following': FieldValue.arrayRemove([newFollowing.toMap()]),
+            });
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(targetUser.uId)
+            .update({
+              "followers": FieldValue.arrayRemove([newFollower.toMap()]),
+            });
+        List<FollowModel> updateFollowing = userModel?.following ?? [];
+        updateFollowing.removeWhere((f)=> f.uId == targetUser.uId);
+       userModel= userModel?.copyWith(following: updateFollowing);
+        emit(UnfollowUserSuccessState());
+      } else {
+        //Follow user
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userModel?.uId)
+            .update({
+              'following': FieldValue.arrayUnion([newFollowing.toMap()]),
+            });
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(targetUser.uId)
+            .update({
+              "followers": FieldValue.arrayUnion([newFollower.toMap()]),
+            });
+        List<FollowModel> updateFollowing = userModel?.following ?? [];
+        updateFollowing.add(newFollowing);
+        userModel= userModel?.copyWith(following: updateFollowing);
+        emit(FollowUserSuccessState());
+      }
+    } catch (error) {
       print("Error following user: $error");
       emit(FollowUserErrorState(error.toString()));
-
     }
   }
 }
