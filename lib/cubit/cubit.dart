@@ -485,6 +485,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   bool isFollow = false;
 
+  UserModel? profileModel;
   void followUser({required UserModel targetUser}) async {
     emit(FollowUserLoadingState());
 
@@ -521,6 +522,7 @@ class SocialCubit extends Cubit<SocialStates> {
         updateFollowing.removeWhere((f)=> f.uId == targetUser.uId);
        userModel= userModel?.copyWith(following: updateFollowing);
         emit(UnfollowUserSuccessState());
+
       } else {
         //Follow user
         await FirebaseFirestore.instance
@@ -541,9 +543,21 @@ class SocialCubit extends Cubit<SocialStates> {
         userModel= userModel?.copyWith(following: updateFollowing);
         emit(FollowUserSuccessState());
       }
+
     } catch (error) {
       print("Error following user: $error");
       emit(FollowUserErrorState(error.toString()));
     }
   }
+
+  Future<void> getUserById(String uId) async{
+    try{
+      var snapShot = await FirebaseFirestore.instance.collection('users').doc(uId).get();
+      profileModel = UserModel.fromJson(snapShot.data()!);
+      emit(GetUserByIdSuccessState());
+    } catch (e){
+      emit(GetUserByIdErrorState(e.toString()));
+    }
+  }
 }
+

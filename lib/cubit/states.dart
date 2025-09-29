@@ -171,3 +171,8 @@ class UnfollowUserSuccessState extends SocialStates {
 class FollowUserErrorState extends SocialStates {
   FollowUserErrorState(String string);
 }
+class GetUserByIdSuccessState extends SocialStates{}
+class GetUserByIdErrorState extends SocialStates{
+  final String error;
+  GetUserByIdErrorState(this.error);
+}
