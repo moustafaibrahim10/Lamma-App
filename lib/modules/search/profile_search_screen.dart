@@ -13,9 +13,7 @@ import '../../styles/icon_broken.dart';
 import '../chats/chat_details_screen.dart';
 
 class ProfileSearchScreen extends StatelessWidget {
-   UserModel profileModel;
 
-  ProfileSearchScreen({required this.profileModel});
 
   TextEditingController commentController = TextEditingController();
 
@@ -34,7 +32,7 @@ class ProfileSearchScreen extends StatelessWidget {
       },
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
-        bool isFollow = userModel?.following?.any((f)=> f.uId == profileModel.uId) ?? false;
+        bool isFollow = userModel?.following?.any((f)=> f.uId == cubit.profileModel?.uId) ?? false;
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -74,7 +72,7 @@ class ProfileSearchScreen extends StatelessWidget {
                                 topRight: Radius.circular(4.0),
                               ),
                               image: DecorationImage(
-                                image: NetworkImage('${profileModel?.cover}'),
+                                image: NetworkImage('${cubit.profileModel?.cover}'),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -87,7 +85,7 @@ class ProfileSearchScreen extends StatelessWidget {
                           child: CircleAvatar(
                             radius: 55,
                             backgroundImage: NetworkImage(
-                              '${profileModel?.image}',
+                              '${cubit.profileModel?.image}',
                             ),
                           ),
                         ),
@@ -96,12 +94,12 @@ class ProfileSearchScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    " ${profileModel?.name}",
+                    " ${cubit.profileModel?.name}",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   SizedBox(height: 5),
                   Text(
-                    "${profileModel?.bio}",
+                    "${cubit.profileModel?.bio}",
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   Padding(
@@ -130,7 +128,7 @@ class ProfileSearchScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  profileModel.followers?.length.toString() ??
+                                  cubit.profileModel?.followers?.length.toString() ??
                                       "0",
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
@@ -148,7 +146,7 @@ class ProfileSearchScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  profileModel.following?.length.toString() ??
+                                  cubit.profileModel?.following?.length.toString() ??
                                       "0",
 
                                   style: Theme.of(context).textTheme.bodyLarge,
@@ -170,7 +168,8 @@ class ProfileSearchScreen extends StatelessWidget {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () {
-                            cubit.followUser(targetUser: profileModel);
+                            cubit.followUser(targetUser: cubit.profileModel ?? UserModel());
+
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +189,7 @@ class ProfileSearchScreen extends StatelessWidget {
                           onPressed: () {
                             navigateTo(
                               context,
-                              ChatDetailsScreen(user: profileModel),
+                              ChatDetailsScreen(user: cubit.profileModel ?? UserModel()),
                             );
                           },
                           child: Row(

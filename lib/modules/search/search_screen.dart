@@ -20,6 +20,7 @@ class SearchScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
+
         return Scaffold(
           appBar: AppBar(
             toolbarHeight: 80.0,
@@ -58,9 +59,7 @@ class SearchScreen extends StatelessWidget {
                             cubit.getUserById(cubit.userSearch[index].uId.toString());
                             navigateTo(
                               context,
-                              ProfileSearchScreen(
-                                profileModel: cubit.userSearch[index],
-                              ),
+                              ProfileSearchScreen(),
                             );
                           },
                           child: Row(

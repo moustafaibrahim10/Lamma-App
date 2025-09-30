@@ -488,7 +488,6 @@ class SocialCubit extends Cubit<SocialStates> {
   UserModel? profileModel;
   void followUser({required UserModel targetUser}) async {
     emit(FollowUserLoadingState());
-
     FollowModel newFollowing = FollowModel(
       uId: targetUser.uId,
       name: targetUser.name,
@@ -548,6 +547,9 @@ class SocialCubit extends Cubit<SocialStates> {
       print("Error following user: $error");
       emit(FollowUserErrorState(error.toString()));
     }
+
+    getUserById(targetUser.uId.toString());
+
   }
 
   Future<void> getUserById(String uId) async{
