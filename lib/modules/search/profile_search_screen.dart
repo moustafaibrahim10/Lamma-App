@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/user_model.dart';
+import 'package:social_app/modules/search/followers_screen.dart';
 
 import '../../core/shared/components/components.dart';
 import '../../core/utils/app_constants.dart';
@@ -11,6 +12,7 @@ import '../../cubit/states.dart';
 import '../../models/post_model.dart';
 import '../../styles/icon_broken.dart';
 import '../chats/chat_details_screen.dart';
+import 'following_screen.dart';
 
 class ProfileSearchScreen extends StatelessWidget {
 
@@ -138,7 +140,9 @@ class ProfileSearchScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              navigateTo(context, FollowersScreen(followers: cubit.profileModel?.followers ?? [],));
+                            },
                           ),
                         ),
                         Expanded(
@@ -157,7 +161,10 @@ class ProfileSearchScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              navigateTo(context, FollowingScreen(following: cubit.profileModel?.following ?? [],));
+
+                            },
                           ),
                         ),
                       ],

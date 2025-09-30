@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/styles/icon_broken.dart';
 
+import '../../../models/user_model.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/enums.dart';
 
@@ -19,9 +20,9 @@ Widget defaultTextFormField({
   controller: controller,
   cursorColor: AppConstants.primaryColor,
   obscureText: obscureText!,
-  keyboardType:keyboardType ,
+  keyboardType: keyboardType,
   decoration: InputDecoration(
-    prefixIcon: Icon(icon,color: Colors.grey,),
+    prefixIcon: Icon(icon, color: Colors.grey),
     suffixIcon: suffixIcon,
     labelText: labelText,
     enabledBorder: OutlineInputBorder(
@@ -129,11 +130,26 @@ PreferredSizeWidget defaultAppBar({
   leading: IconButton(
     onPressed: () {
       Navigator.pop(context);
-
     },
-    icon: Icon(IconBroken.Arrow___Left_2,color: Colors.grey,),
+    icon: Icon(IconBroken.Arrow___Left_2, color: Colors.grey),
   ),
   titleSpacing: 3.0,
-  title: title != null && title.isNotEmpty ? Text(title,style: Theme.of(context).textTheme.headlineSmall,) : null,
+  title:
+      title != null && title.isNotEmpty
+          ? Text(title, style: Theme.of(context).textTheme.headlineSmall)
+          : null,
   actions: actions,
 );
+
+Widget followItem(int index, List<FollowModel> list) {
+  return Row(
+    children: [
+      CircleAvatar(
+        radius: 20.0,
+        backgroundImage: NetworkImage(list[index].image.toString()),
+      ),
+      SizedBox(width: 10.0),
+      Text(list[index].name.toString()),
+    ],
+  );
+}

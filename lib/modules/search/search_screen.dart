@@ -13,6 +13,7 @@ import '../../core/shared/components/components.dart';
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     TextEditingController searchController = TextEditingController();
