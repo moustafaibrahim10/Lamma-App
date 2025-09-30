@@ -176,3 +176,4 @@ class GetUserByIdErrorState extends SocialStates{
   final String error;
   GetUserByIdErrorState(this.error);
 }
+class RemoveLastItemState extends SocialStates{}

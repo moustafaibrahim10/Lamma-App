@@ -6,11 +6,13 @@ import 'package:social_app/core/shared/local/cache_helper.dart';
 import 'package:social_app/core/utils/app_constants.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/states.dart';
+import 'package:social_app/follow/following_screen.dart';
 import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/modules/profile/edit_profile.dart';
 import 'package:social_app/styles/icon_broken.dart';
 
 import '../../core/utils/enums.dart';
+import '../../follow/followers_screen.dart';
 import '../../models/post_model.dart';
 import '../new_post/new_post_screen.dart';
 
@@ -114,7 +116,9 @@ class ProfileScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            navigateTo(context, FollowersScreen(followers: userModel?.followers ?? []));
+                          },
                         ),
                       ),
                       Expanded(
@@ -131,7 +135,9 @@ class ProfileScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            navigateTo(context, FollowingScreen(following: userModel?.following ?? []));
+                          },
                         ),
                       ),
                     ],

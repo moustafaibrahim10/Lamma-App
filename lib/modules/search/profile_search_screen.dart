@@ -2,7 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/user_model.dart';
-import 'package:social_app/modules/search/followers_screen.dart';
+import 'package:social_app/follow/followers_screen.dart';
 
 import '../../core/shared/components/components.dart';
 import '../../core/utils/app_constants.dart';
@@ -12,7 +12,7 @@ import '../../cubit/states.dart';
 import '../../models/post_model.dart';
 import '../../styles/icon_broken.dart';
 import '../chats/chat_details_screen.dart';
-import 'following_screen.dart';
+import '../../follow/following_screen.dart';
 
 class ProfileSearchScreen extends StatelessWidget {
 
@@ -39,7 +39,12 @@ class ProfileSearchScreen extends StatelessWidget {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                if(cubit.profileStack.length >1) {
+                  cubit.removeLastItem();
+
+                }
+                  Navigator.pop(context);
+
               },
               icon: Icon(IconBroken.Arrow___Left_2, color: Colors.grey),
             ),

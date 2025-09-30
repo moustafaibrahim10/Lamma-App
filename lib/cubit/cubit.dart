@@ -485,7 +485,6 @@ class SocialCubit extends Cubit<SocialStates> {
 
   bool isFollow = false;
 
-  UserModel? profileModel;
   void followUser({required UserModel targetUser}) async {
     emit(FollowUserLoadingState());
     FollowModel newFollowing = FollowModel(
@@ -552,14 +551,30 @@ class SocialCubit extends Cubit<SocialStates> {
 
   }
 
+
+  List<String> profileStack =[];
+  UserModel?  profileModel  ;
   Future<void> getUserById(String uId) async{
     try{
       var snapShot = await FirebaseFirestore.instance.collection('users').doc(uId).get();
-      profileModel = UserModel.fromJson(snapShot.data()!);
+       profileModel = UserModel.fromJson(snapShot.data()!);
+      profileStack.add(uId);
+       getTargetUserPosts(targetUid: uId);
       emit(GetUserByIdSuccessState());
     } catch (e){
       emit(GetUserByIdErrorState(e.toString()));
     }
   }
+  void removeLastItem() async {
+    if (profileStack.isNotEmpty) {
+      profileStack.removeLast();
+      if (profileStack.isNotEmpty) {
+        await getUserById(profileStack.last);
+      }
+
+      emit(RemoveLastItemState());
+    }
+  }
+
 }
 
