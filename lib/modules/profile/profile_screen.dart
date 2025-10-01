@@ -117,7 +117,12 @@ class ProfileScreen extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
-                            navigateTo(context, FollowersScreen(followers: userModel?.followers ?? []));
+                            navigateTo(
+                              context,
+                              FollowersScreen(
+                                followers: userModel?.followers ?? [],
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -136,7 +141,12 @@ class ProfileScreen extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
-                            navigateTo(context, FollowingScreen(following: userModel?.following ?? []));
+                            navigateTo(
+                              context,
+                              FollowingScreen(
+                                following: userModel?.following ?? [],
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -254,8 +264,29 @@ class ProfileScreen extends StatelessWidget {
               ),
               SizedBox(width: 15),
               IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.more_horiz, size: 17),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => AlertDialog(
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          title: Text(
+                            "Are you sure you want to delete this post?",
+                          ),
+                          actions: [
+                            defaultTextbutton(text: "Cancel", function: () {
+                              Navigator.pop(context);
+                            }),
+                            defaultTextbutton(
+                              text: "Yes",
+                              function: () {},
+                              color: Colors.red,
+                            ),
+                          ],
+                        ),
+                  );
+                },
+                icon: Icon(IconBroken.Delete, color: Colors.red, size: 17),
               ),
             ],
           ),
