@@ -177,3 +177,7 @@ class GetUserByIdErrorState extends SocialStates{
   GetUserByIdErrorState(this.error);
 }
 class RemoveLastItemState extends SocialStates{}
+
+class DeletePostLoadingState extends SocialStates{}
+class DeletePostSuccessState extends SocialStates{}
+class DeletePostErrorState extends SocialStates{}

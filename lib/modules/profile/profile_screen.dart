@@ -269,17 +269,24 @@ class ProfileScreen extends StatelessWidget {
                     context: context,
                     builder:
                         (context) => AlertDialog(
-                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          backgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
                           title: Text(
                             "Are you sure you want to delete this post?",
                           ),
                           actions: [
-                            defaultTextbutton(text: "Cancel", function: () {
-                              Navigator.pop(context);
-                            }),
+                            defaultTextbutton(
+                              text: "Cancel",
+                              function: () {
+                                Navigator.pop(context);
+                              },
+                            ),
                             defaultTextbutton(
                               text: "Yes",
-                              function: () {},
+                              function: () {
+                                cubit.deletePost(postId: model.uId ?? "");
+                                Navigator.pop(context);
+                              },
                               color: Colors.red,
                             ),
                           ],

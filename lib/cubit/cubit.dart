@@ -517,10 +517,9 @@ class SocialCubit extends Cubit<SocialStates> {
               "followers": FieldValue.arrayRemove([newFollower.toMap()]),
             });
         List<FollowModel> updateFollowing = userModel?.following ?? [];
-        updateFollowing.removeWhere((f)=> f.uId == targetUser.uId);
-       userModel= userModel?.copyWith(following: updateFollowing);
+        updateFollowing.removeWhere((f) => f.uId == targetUser.uId);
+        userModel = userModel?.copyWith(following: updateFollowing);
         emit(UnfollowUserSuccessState());
-
       } else {
         //Follow user
         await FirebaseFirestore.instance
@@ -538,33 +537,33 @@ class SocialCubit extends Cubit<SocialStates> {
             });
         List<FollowModel> updateFollowing = userModel?.following ?? [];
         updateFollowing.add(newFollowing);
-        userModel= userModel?.copyWith(following: updateFollowing);
+        userModel = userModel?.copyWith(following: updateFollowing);
         emit(FollowUserSuccessState());
       }
-
     } catch (error) {
       print("Error following user: $error");
       emit(FollowUserErrorState(error.toString()));
     }
 
     getUserById(targetUser.uId.toString());
-
   }
 
+  List<String> profileStack = [];
+  UserModel? profileModel;
 
-  List<String> profileStack =[];
-  UserModel?  profileModel  ;
-  Future<void> getUserById(String uId) async{
-    try{
-      var snapShot = await FirebaseFirestore.instance.collection('users').doc(uId).get();
-       profileModel = UserModel.fromJson(snapShot.data()!);
+  Future<void> getUserById(String uId) async {
+    try {
+      var snapShot =
+          await FirebaseFirestore.instance.collection('users').doc(uId).get();
+      profileModel = UserModel.fromJson(snapShot.data()!);
       profileStack.add(uId);
-       getTargetUserPosts(targetUid: uId);
+      getTargetUserPosts(targetUid: uId);
       emit(GetUserByIdSuccessState());
-    } catch (e){
+    } catch (e) {
       emit(GetUserByIdErrorState(e.toString()));
     }
   }
+
   void removeLastItem() async {
     if (profileStack.isNotEmpty) {
       profileStack.removeLast();
@@ -576,5 +575,30 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-}
+  void deletePost({required String postId}) async {
+    emit(DeletePostLoadingState());
+    FirebaseFirestore.instance
+    .collection('posts')
+    .doc(postId)
+    .delete().then((value){
 
+      int index = postsIds.indexOf(postId);
+      if(index !=-1) {
+            postsIds.removeAt(index);
+            posts.removeAt(index);
+            if (index < likes.length) {
+              likes.removeAt(index);
+              isLiked.removeAt(index);
+            }
+            myPosts.removeAt(index);
+          }
+
+      getPosts();
+
+      emit(DeletePostSuccessState());
+
+    }).catchError((error){
+      emit(DeletePostErrorState());
+    });
+  }
+}
