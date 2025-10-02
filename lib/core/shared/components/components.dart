@@ -103,6 +103,7 @@ Future pushAndFinish({required BuildContext context, required Widget screen}) =>
 Widget defaultTextbutton({
   required String text,
   required Function() function,
+  double? size,
   Color? color,
 }) => TextButton(
   onPressed: function,
@@ -110,7 +111,7 @@ Widget defaultTextbutton({
     text,
     style: TextStyle(
       color:color?? AppConstants.primaryColor,
-      fontSize: 18,
+      fontSize: size??18,
       fontWeight: FontWeight.bold,
     ),
   ),

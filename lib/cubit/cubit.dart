@@ -577,28 +577,41 @@ class SocialCubit extends Cubit<SocialStates> {
 
   void deletePost({required String postId}) async {
     emit(DeletePostLoadingState());
-    FirebaseFirestore.instance
-    .collection('posts')
-    .doc(postId)
-    .delete().then((value){
 
-      int index = postsIds.indexOf(postId);
-      if(index !=-1) {
-            postsIds.removeAt(index);
-            posts.removeAt(index);
-            if (index < likes.length) {
-              likes.removeAt(index);
-              isLiked.removeAt(index);
-            }
-            myPosts.removeAt(index);
-          }
+    try {
+      print("Deleting post with ID: $postId");
 
+      await FirebaseFirestore.instance
+          .collection("posts")
+          .doc(postId)
+          .delete();
+
+
+      int postIndex = postsIds.indexOf(postId);
+      PostModel? postToDelete;
+
+      if (postIndex != -1) {
+        postToDelete = posts[postIndex];
+
+        if (postToDelete != null) {
+          myPosts.remove(postToDelete);
+        }
+
+        postsIds.removeAt(postIndex);
+        posts.removeAt(postIndex);
+
+        if (postIndex < likes.length) {
+          likes.removeAt(postIndex);
+          isLiked.removeAt(postIndex);
+        }
+      }
       getPosts();
-
       emit(DeletePostSuccessState());
 
-    }).catchError((error){
+    } catch (error) {
+      print("Firebase Delete Error: $error");
       emit(DeletePostErrorState());
-    });
+    }
   }
+
 }
