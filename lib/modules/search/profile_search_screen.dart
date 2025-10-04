@@ -208,7 +208,7 @@ class ProfileSearchScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("Send Message"),
-                              SizedBox(width: 10),
+                              SizedBox(width: 5),
                               Icon(IconBroken.Chat),
                             ],
                           ),

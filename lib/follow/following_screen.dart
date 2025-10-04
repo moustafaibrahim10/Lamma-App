@@ -19,7 +19,7 @@ class FollowingScreen extends StatelessWidget {
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
         return Scaffold(
-          appBar: defaultAppBar(context: context, title: "Followers"),
+          appBar: defaultAppBar(context: context, title: "Following"),
           body: Padding(
             padding: const EdgeInsets.all(20.0),
             child: ListView.separated(
