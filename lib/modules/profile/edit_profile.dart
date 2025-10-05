@@ -89,13 +89,13 @@ class EditProfileScreen extends StatelessWidget {
                                   ),
                                   image: DecorationImage(
                                     image:
-                                        cubit.coverImage == null
-                                            ? NetworkImage(
-                                              '${userModel?.cover}',
-                                            )
-                                            : FileImage(
-                                              File(cubit.coverImage!.path),
-                                            ),
+                                    cubit.coverImage == null
+                                        ? NetworkImage(
+                                      '${userModel?.cover}',
+                                    )
+                                        : FileImage(
+                                      File(cubit.coverImage!.path),
+                                    ),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -133,15 +133,17 @@ class EditProfileScreen extends StatelessWidget {
                             CircleAvatar(
                               radius: 59,
                               backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
+                              Theme
+                                  .of(context)
+                                  .scaffoldBackgroundColor,
                               child: CircleAvatar(
                                 radius: 55,
                                 backgroundImage:
-                                    cubit.profileImage == null
-                                        ? NetworkImage('${userModel?.image}')
-                                        : FileImage(
-                                          File(cubit.profileImage!.path),
-                                        ),
+                                cubit.profileImage == null
+                                    ? NetworkImage('${userModel?.image}')
+                                    : FileImage(
+                                  File(cubit.profileImage!.path),
+                                ),
                               ),
                             ),
                             Padding(
